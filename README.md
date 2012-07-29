@@ -8,3 +8,10 @@ For content elements, you can use the `TwigContentElement` class,
 and for modules the `TwigModule` class. These basic classes allready uses the Twig*Template classes.
 
 You have to suffix your templates with `.twig`, look at the examples in the `templates` directory.
+
+Dependencies
+------------
+
+* ApcCache https://github.com/InfinitySoft/contao-apccache
+* Autoloader https://github.com/InfinitySoft/contao2-autoloader
+
