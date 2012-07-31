@@ -1,6 +1,6 @@
 <?php
 
-class ContaoTwig
+class ContaoTwig extends System
 {
 	/**
 	 * @var ContaoTwig
@@ -89,6 +89,8 @@ class ContaoTwig
 		// Add some filters
 		$this->environment->addFilter('deserialize', new Twig_Filter_Function('deserialize'));
 		$this->environment->addFilter('standardize', new Twig_Filter_Function('standardize'));
+		$this->environment->addFilter('dateFormat', new Twig_Filter_Function('ContaoTwig::parseDateFilter'));
+		$this->environment->addFilter('datimFormat', new Twig_Filter_Function('ContaoTwig::parseDatimFilter'));
 	}
 
 	/**
@@ -119,5 +121,15 @@ class ContaoTwig
 	public function getEnvironment()
 	{
 		return $this->environment;
+	}
+
+	public static function parseDateFilter($timestamp)
+	{
+		return self::getInstance()->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $timestamp);
+	}
+
+	public static function parseDatimFilter($timestamp)
+	{
+		return self::getInstance()->parseDate($GLOBALS['TL_CONFIG']['datimFormat'], $timestamp);
 	}
 }
