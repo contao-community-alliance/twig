@@ -1,0 +1,49 @@
+<!-- indexer::stop -->
+<div class="pagination block">
+
+	<p>{{ _lang.MSC.totalPages|format(page, total)|raw }}</p>
+	<ul>
+		{% if hasFirst %}
+		<li class="first">
+			<a href="{{ first.href }}" class="first"
+			   title="{{ _lang.MSC.goToPage|format(first.page) }}">
+				{{ _lang.MSC.first|raw }}
+			</a>
+		</li>
+		{% endif %}
+		{% if hasPrevious %}
+		<li class="previous">
+			<a href="{{ previous.href }}" class="previous"
+			   title="{{ _lang.MSC.goToPage|format(previous.page) }}">
+				{{ _lang.MSC.previous|raw }}
+			</a>
+		</li>
+		{% endif %}
+		{% for item in items %}
+		<li class="page{% if item.current %} current{% endif %}">
+			<a href="{{ item.href }}" class="next"
+			   title="{{ _lang.MSC.goToPage|format(item.page) }}">
+				{{ item.page }}
+			</a>
+		</li>
+		{% endfor %}
+		{% if $this->hasNext %}
+		<li class="next">
+			<a href="{{ next.href }}" class="next"
+			   title="{{ _lang.MSC.goToPage|format(next.page) }}">
+				{{ _lang.MSC.next|raw }}
+			</a>
+		</li>
+		{% endif %}
+		{% if hasLast %}
+		<li class="last">
+			<a href="{{ last.href }}" class="last"
+			   title="{{ _lang.MSC.goToPage|format(last.page) }}">
+				{{ _lang.MSC.last|raw }}
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+
+</div>
+<!-- indexer::continue -->
