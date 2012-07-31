@@ -82,6 +82,9 @@ class ContaoTwig
 				'debug' => $GLOBALS['TL_CONFIG']['debugMode']
 			)
 		);
+
+		// Add some globals
+		$this->environment->addGlobal('_lang', new ContaoTwigLang());
 	}
 
 	/**
