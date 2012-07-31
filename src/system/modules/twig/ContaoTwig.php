@@ -85,6 +85,9 @@ class ContaoTwig
 
 		// Add some globals
 		$this->environment->addGlobal('_lang', new ContaoTwigLang());
+
+		// Add some filters
+		$this->environment->addFilter('deserialize', new Twig_Filter_Function('deserialize'));
 	}
 
 	/**
