@@ -44,13 +44,11 @@ class ContaoTwig
 		$arrTemplatePaths = array();
 
 		// Add the layout templates directory
-		if (TL_MODE == 'FE')
-		{
+		if (TL_MODE == 'FE') {
 			global $objPage;
 			$strTemplateGroup = str_replace(array('../', 'templates/'), '', $objPage->templateGroup);
 
-			if ($strTemplateGroup != '')
-			{
+			if ($strTemplateGroup != '') {
 				$arrTemplatePaths[] = TL_ROOT . '/templates/' . $strTemplateGroup;
 			}
 		}
@@ -59,8 +57,7 @@ class ContaoTwig
 		$arrTemplatePaths[] = TL_ROOT . '/templates';
 
 		// Add all modules templates directories
-		foreach (Config::getInstance()->getActiveModules() as $strModule)
-		{
+		foreach (Config::getInstance()->getActiveModules() as $strModule) {
 			$strPath = TL_ROOT . '/system/modules/' . $strModule . '/templates';
 
 			if (is_dir($strPath)) {
