@@ -88,6 +88,7 @@ class ContaoTwig
 
 		// Add some filters
 		$this->environment->addFilter('deserialize', new Twig_Filter_Function('deserialize'));
+		$this->environment->addFilter('standardize', new Twig_Filter_Function('standardize'));
 	}
 
 	/**
