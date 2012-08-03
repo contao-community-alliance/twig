@@ -3,6 +3,11 @@
 abstract class TwigContentElement extends ContentElement
 {
 	/**
+	 * @var TwigFrontendTemplate
+	 */
+	protected $Template;
+
+	/**
 	 * Parse the template
 	 * @return string
 	 */

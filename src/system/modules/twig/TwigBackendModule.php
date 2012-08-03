@@ -3,6 +3,11 @@
 abstract class TwigBackendModule extends BackendModule
 {
 	/**
+	 * @var TwigBackendTemplate
+	 */
+	protected $Template;
+
+	/**
 	 * Parse the template
 	 * @return string
 	 */
