@@ -83,6 +83,9 @@ class ContaoTwig extends System
 			)
 		);
 
+		// Add debug extension
+		$this->environment->addExtension(new Twig_Extension_Debug());
+
 		// Add some globals
 		$this->environment->addGlobal('_lang', new ContaoTwigGlobalAccessObject('TL_LANG'));
 		$this->environment->addGlobal('_dca', new ContaoTwigGlobalAccessObject('TL_DCA'));
