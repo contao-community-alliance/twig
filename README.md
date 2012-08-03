@@ -12,6 +12,4 @@ You have to suffix your templates with `.twig`, look at the examples in the `tem
 Dependencies
 ------------
 
-* ApcCache https://github.com/InfinitySoft/contao-apccache
-* Autoloader https://github.com/InfinitySoft/contao2-autoloader
-
+* Twig http://twig.sensiolabs.org/
