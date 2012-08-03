@@ -11,7 +11,7 @@ class ContaoTwigLoaderFilesystemCached extends Twig_Loader_Filesystem
 	{
 		parent::__construct($paths);
 
-		$this->cache = FileCache::getInstance('twig');
+		$this->cache = ContaoTwigCache::getInstance('twig');
 	}
 
     /**
