@@ -97,6 +97,20 @@ class ContaoTwig extends System
 		$this->environment->addFilter('standardize', new Twig_Filter_Function('standardize'));
 		$this->environment->addFilter('dateFormat', new Twig_Filter_Function('ContaoTwig::parseDateFilter'));
 		$this->environment->addFilter('datimFormat', new Twig_Filter_Function('ContaoTwig::parseDatimFilter'));
+
+		// Add database access filters
+		$this->environment->addFilter('prepare', new Twig_Filter_Function('ContaoTwig::prepareFilter'));
+		$this->environment->addFilter('set', new Twig_Filter_Function('ContaoTwig::setFilter'));
+		$this->environment->addFilter('execute', new Twig_Filter_Function('ContaoTwig::executeFilter'));
+		$this->environment->addFilter('query', new Twig_Filter_Function('ContaoTwig::queryFilter'));
+
+		// HOOK: custom twig initialisation
+		if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
+			foreach ($GLOBALS['TL_HOOKS']['initializeTwig'] as $callback) {
+				$this->import($callback[0]);
+				$this->$callback[0]->$callback[1]($this);
+			}
+		}
 	}
 
 	/**
@@ -129,13 +143,102 @@ class ContaoTwig extends System
 		return $this->environment;
 	}
 
+	/**
+	 * Parse the timestamp with the default date format.
+	 *
+	 * @static
+	 *
+	 * @param int $timestamp
+	 *
+	 * @return string
+	 */
 	public static function parseDateFilter($timestamp)
 	{
 		return self::getInstance()->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $timestamp);
 	}
 
+	/**
+	 * Parse the timestamp with the default date and time format.
+	 *
+	 * @static
+	 *
+	 * @param int $timestamp
+	 *
+	 * @return string
+	 */
 	public static function parseDatimFilter($timestamp)
 	{
 		return self::getInstance()->parseDate($GLOBALS['TL_CONFIG']['datimFormat'], $timestamp);
+	}
+
+	/**
+	 * Prepare a database statement.
+	 *
+	 * @static
+	 *
+	 * @param string $sql
+	 *
+	 * @return Database_Statement
+	 */
+	public static function prepareFilter($sql)
+	{
+		return Database::getInstance()->prepare($sql);
+	}
+
+	/**
+	 * Set database statement update arguments.
+	 *
+	 * @static
+	 *
+	 * @param Database_Statement $statement
+	 * @param array $arguments
+	 *
+	 * @return Database_Statement
+	 */
+	public static function setFilter(Database_Statement $statement, array $arguments)
+	{
+		return $statement->set($arguments);
+	}
+
+	/**
+	 * Execute a database statement.
+	 *
+	 * @static
+	 *
+	 * @param string|Database_Statement $statement
+	 * @param array $arguments
+	 *
+	 * @return Database_Result
+	 */
+	public static function executeFilter($statement, array $arguments = array())
+	{
+		if ($statement instanceof Database_Statement) {
+			/** @var Database_Statement $statement */
+			return $statement
+				->execute($arguments)
+				->fetchAllAssoc();
+		}
+
+		else {
+			return Database::getInstance()
+				->execute($statement)
+				->fetchAllAssoc();
+		}
+	}
+
+	/**
+	 * Execute a database query.
+	 *
+	 * @static
+	 *
+	 * @param string $statement
+	 *
+	 * @return Database_Result
+	 */
+	public static function queryFilter($statement)
+	{
+		return Database::getInstance()
+			->query($statement)
+			->fetchAllAssoc();
 	}
 }
