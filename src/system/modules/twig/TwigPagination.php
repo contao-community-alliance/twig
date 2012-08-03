@@ -9,7 +9,7 @@ class TwigPagination extends Pagination
 	 *
 	 * @return string
 	 */
-	public function generate()
+	public function generate($strSeparator = '')
 	{
 		if ($this->intRowsPerPage < 1) {
 			return '';
