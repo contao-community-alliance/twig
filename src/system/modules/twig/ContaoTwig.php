@@ -84,7 +84,7 @@ class ContaoTwig extends System
 		);
 
 		// Add some globals
-		$this->environment->addGlobal('_lang', new ContaoTwigLang());
+		$this->environment->addGlobal('_lang', new ContaoTwigGlobalAccessObject('TL_LANG'));
 
 		// Add some filters
 		$this->environment->addFilter('deserialize', new Twig_Filter_Function('deserialize'));
