@@ -21,7 +21,7 @@
 		{% endif %}
 		{% for item in items %}
 		<li class="page{% if item.current %} current{% endif %}">
-			<a href="{{ item.href }}" class="next"
+			<a href="{{ item.href }}"
 			   title="{{ _lang.MSC.goToPage|format(item.page) }}">
 				{{ item.page }}
 			</a>
