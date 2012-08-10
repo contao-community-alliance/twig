@@ -27,7 +27,7 @@
 			</a>
 		</li>
 		{% endfor %}
-		{% if $this->hasNext %}
+		{% if hasNext %}
 		<li class="next">
 			<a href="{{ next.href }}" class="next"
 			   title="{{ _lang.MSC.goToPage|format(next.page) }}">
