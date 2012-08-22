@@ -1,22 +1,28 @@
 <?php
 
-abstract class TwigSimpleHybrid extends TwigHybrid
+abstract class TwigSimpleHybrid
+    extends TwigHybrid
 {
-	public function __construct(Database_Result $objElement)
-	{
-		parent::__construct($objElement);
+    public function __construct(Database_Result $objElement)
+    {
+        parent::__construct($objElement);
 
-		$this->arrData = $objElement->row();
+        $this->arrData = $objElement->row();
 
-		// Get space and CSS ID from the parent element (!)
-		$this->space = deserialize($objElement->space);
-		$this->cssID = deserialize($objElement->cssID, true);
+        // Get space and CSS ID from the parent element (!)
+        $this->space = deserialize($objElement->space);
+        $this->cssID = deserialize($objElement->cssID,
+                                   true);
 
-		$this->typePrefix = 'mod_';
-        $this->strKey = $objElement->type;
+        $this->typePrefix = 'mod_';
+        $this->strKey     = $objElement->type;
 
-		$arrHeadline = deserialize($objElement->headline);
-		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-	}
+        $arrHeadline    = deserialize($objElement->headline);
+        $this->headline = is_array($arrHeadline)
+            ? $arrHeadline['value']
+            : $arrHeadline;
+        $this->hl       = is_array($arrHeadline)
+            ? $arrHeadline['unit']
+            : 'h1';
+    }
 }

@@ -1,18 +1,19 @@
 <?php
 
-class ContaoTwigLoaderFilesystemCached extends Twig_Loader_Filesystem
+class ContaoTwigLoaderFilesystemCached
+    extends Twig_Loader_Filesystem
 {
-	/**
-	 * @var ApcCache
-	 */
-	protected $cache;
+    /**
+     * @var ApcCache
+     */
+    protected $cache;
 
-	public function __construct($paths)
-	{
-		parent::__construct($paths);
+    public function __construct($paths)
+    {
+        parent::__construct($paths);
 
-		$this->cache = ContaoTwigCache::getInstance('twig');
-	}
+        $this->cache = ContaoTwigCache::getInstance('twig');
+    }
 
     /**
      * Adds a path where templates are stored.
@@ -22,9 +23,11 @@ class ContaoTwigLoaderFilesystemCached extends Twig_Loader_Filesystem
     public function addPath($path)
     {
         if (!is_dir($path)) {
-            throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
+            throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.',
+                                                $path));
         }
 
-        $this->paths[] = rtrim($path, '/\\');
+        $this->paths[] = rtrim($path,
+                               '/\\');
     }
 }
