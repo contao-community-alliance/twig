@@ -12,7 +12,8 @@ abstract class TwigSimpleHybrid extends TwigHybrid
 		$this->space = deserialize($objElement->space);
 		$this->cssID = deserialize($objElement->cssID, true);
 
-		$this->typePrefix = $objElement->typePrefix;
+		$this->typePrefix = 'mod_';
+        $this->strKey = $objElement->type;
 
 		$arrHeadline = deserialize($objElement->headline);
 		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
