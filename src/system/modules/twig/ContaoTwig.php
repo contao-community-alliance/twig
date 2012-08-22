@@ -78,7 +78,7 @@ class ContaoTwig extends System
 		$this->environment = new Twig_Environment(
 			$this->loader,
 			array(
-				'cache' => TL_ROOT . '/system/cache',
+				'cache' => TL_ROOT . '/system/cache/twig',
 				'debug' => $GLOBALS['TL_CONFIG']['debugMode']
 			)
 		);
