@@ -1,11 +1,10 @@
-
 <div class="{{ class }} block"{{ cssID }}{% if style %} style="{{ style }}}"{% endif %}{% block attributes %}{% endblock %}>
-	{% block headline %}
+    {% block headline %}
     {% if headline %}
 
-		<{{ hl }}>{{ headline }}</{{ hl }}>
-	{% endif %}
+    <{{ hl }}>{{ headline }}</{{ hl }}>
+    {% endif %}
     {% endblock %}
 
-	{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </div>
