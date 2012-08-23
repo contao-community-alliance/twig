@@ -119,6 +119,8 @@ class ContaoTwig
         }
 
         // Add some globals
+        $this->environment->addGlobal('REQUEST_TOKEN',
+                                      REQUEST_TOKEN);
         $this->environment->addGlobal('_lang',
                                       new ContaoTwigGlobalAccessObject('TL_LANG'));
         $this->environment->addGlobal('_dca',

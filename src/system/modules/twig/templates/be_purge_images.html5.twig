@@ -1,0 +1,25 @@
+<div id="tl_maintenance_cache" class="maintenance_{% if isActive %}active{% else %}inactive{% endif %}">
+
+    <h2 class="sub_headline">{{ _lang.tl_maintenance.purgeTwigCache }}</h2>
+
+    {% if cacheMessage %}
+    <div class="tl_message">
+        <p class="tl_confirm">{{ cacheMessage }}</p>
+    </div>
+    {% endif %}
+
+    <div class="tl_message">
+        <p>{{ count }}</p>
+    </div>
+
+    <form action="{{ action }}" class="tl_form" method="post">
+        <div class="tl_tbox">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_purge_twig_cache">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ REQUEST_TOKEN }}">
+        </div>
+        <div class="tl_submit_container">
+            <input type="submit" class="tl_submit" value="{{ _lang.tl_maintenance.doPurgeTwigCache }}">
+        </div>
+    </form>
+
+</div>

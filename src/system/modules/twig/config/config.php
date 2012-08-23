@@ -17,3 +17,8 @@ ini_set('unserialize_callback_func',
 spl_autoload_register(array(new Twig_Autoloader, 'autoload'),
                       true,
                       true);
+
+/**
+ * Maintenance
+ */
+$GLOBALS['TL_MAINTENANCE'][] = 'PurgeTwigCache';
