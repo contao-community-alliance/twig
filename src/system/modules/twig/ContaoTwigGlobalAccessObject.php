@@ -1,12 +1,35 @@
 <?php
 
+/**
+ * Twig Integration for the Contao OpenSource CMS
+ *
+ * @package ContaoTwig
+ * @link    https://github.com/InfinitySoft/contao-twig SCM
+ * @link    http://de.contaowiki.org/Twig Wiki
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+
+/**
+ * Class ContaoTwigGlobalAccessObject
+ *
+ * Provide access to global variables by reference..
+ *
+ * @package ContaoTwig
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ */
 class ContaoTwigGlobalAccessObject
 {
     /**
+     * The global variable name.
+     *
      * @var string
      */
     protected $var;
 
+    /**
+     * @param string $var
+     */
     public function __construct($var)
     {
         $this->var = $var;

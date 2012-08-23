@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * Twig Integration for the Contao OpenSource CMS
+ *
+ * @package ContaoTwig
+ * @link    https://github.com/InfinitySoft/contao-twig SCM
+ * @link    http://de.contaowiki.org/Twig Wiki
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+
+/**
+ * Class ContaoTwig
+ *
+ * Set up the twig environment and provide the template loaders.
+ *
+ * @package ContaoTwig
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ */
 class ContaoTwig
     extends System
 {
@@ -23,16 +41,22 @@ class ContaoTwig
     }
 
     /**
+     * The filesystem template loader.
+     *
      * @var Twig_Loader_Filesystem
      */
     protected $loaderFilesystem;
 
     /**
+     * The loader chain that is used by the environment.
+     *
      * @var Twig_Loader_Chain
      */
     protected $loader;
 
     /**
+     * The Twig environment.
+     *
      * @var Twig_Environment
      */
     protected $environment;

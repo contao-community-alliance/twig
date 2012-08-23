@@ -1,10 +1,28 @@
 <?php
 
+/**
+ * Twig Integration for the Contao OpenSource CMS
+ *
+ * @package ContaoTwig
+ * @link    https://github.com/InfinitySoft/contao-twig SCM
+ * @link    http://de.contaowiki.org/Twig Wiki
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+
+/**
+ * Class ContaoTwigLoaderFilesystemCached
+ *
+ * A Twig_Loader_Filesystem implementation that use ContaoTwigCache for caching.
+ *
+ * @package ContaoTwig
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ */
 class ContaoTwigLoaderFilesystemCached
     extends Twig_Loader_Filesystem
 {
     /**
-     * @var ApcCache
+     * @var ContaoTwigCache
      */
     protected $cache;
 

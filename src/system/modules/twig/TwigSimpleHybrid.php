@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * Twig Integration for the Contao OpenSource CMS
+ *
+ * @package ContaoTwig
+ * @link    https://github.com/InfinitySoft/contao-twig SCM
+ * @link    http://de.contaowiki.org/Twig Wiki
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+
+/**
+ * Class TwigSimpleHybrid
+ *
+ * A specialised implementation of TwigHybrid that does not need a third data table.
+ * The SimpleHybrid use the given element itself (content element or module) as data source.
+ *
+ * @package ContaoTwig
+ * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ */
 abstract class TwigSimpleHybrid
     extends TwigHybrid
 {
