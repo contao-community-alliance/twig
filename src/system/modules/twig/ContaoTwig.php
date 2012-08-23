@@ -68,6 +68,8 @@ class ContaoTwig
     {
         $arrTemplatePaths = array();
 
+        $blnDebug = $GLOBALS['TL_CONFIG']['debugMode'] || $GLOBALS['TL_CONFIG']['twigDebugMode'];
+
         // Add the layout templates directory
         if (TL_MODE == 'FE') {
             global $objPage;
@@ -107,12 +109,14 @@ class ContaoTwig
             $this->loader,
             array(
                  'cache' => TL_ROOT . '/system/cache/twig',
-                 'debug' => $GLOBALS['TL_CONFIG']['debugMode']
+                 'debug' => $blnDebug
             )
         );
 
         // Add debug extension
-        $this->environment->addExtension(new Twig_Extension_Debug());
+        if ($blnDebug || $GLOBALS['TL_CONFIG']['twigDebugExtension']) {
+            $this->environment->addExtension(new Twig_Extension_Debug());
+        }
 
         // Add some globals
         $this->environment->addGlobal('_lang',
