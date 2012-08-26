@@ -1,0 +1,10 @@
+
+<ul class="{{ level }}">
+{% for item in items %}
+{% if item.isActive %}
+<li class="active{% if item.class %} {{ item.class }}{% endif %}"><span class="active{% if item.class %} {{ item.class }}{% endif %}">{{ item.link }}</span>{{ item.subitems }}</li>
+{% else %}
+<li{% if item.class %} class="{{ item.class }}"{% endif %}><a href="{{ item.href }}" title="{{ item.pageTitle ? item.pageTitle : item.title }}"{% if item.class %} class="{{ item.class }}"{% endif %}{% if item.accesskey != '' %} accesskey="{{ item.accesskey }}"{% endif %}{% if item.tabindex %} tabindex="{{ item.tabindex }}"{% endif %}{% if item.nofollow %} rel="nofollow"{% endif %}{{ item.target }}>{{ item.link }}</a>{{ item.subitems }}</li>
+{% endif %}
+{% endfor %}
+</ul>
