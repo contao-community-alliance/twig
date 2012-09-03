@@ -17,6 +17,8 @@ ini_set('unserialize_callback_func',
 spl_autoload_register(array(new Twig_Autoloader, 'autoload'),
                       true,
                       true);
+spl_autoload_register('__autoload',
+                      true);
 
 /**
  * Maintenance
