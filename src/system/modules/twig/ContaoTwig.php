@@ -70,6 +70,19 @@ class ContaoTwig
 
         $blnDebug = $GLOBALS['TL_CONFIG']['debugMode'] || $GLOBALS['TL_CONFIG']['twigDebugMode'];
 
+        // Make sure the cache directory exists
+        if (version_compare(VERSION,
+                            '2',
+                            '<=') && !is_dir(TL_ROOT . '/system/cache')
+        ) {
+            Files::getInstance()
+                ->mkdir('system/cache');
+        }
+        if (!is_dir(TL_ROOT . '/system/cache/twig')) {
+            Files::getInstance()
+                ->mkdir('system/cache/twig');
+        }
+
         // Add the layout templates directory
         if (TL_MODE == 'FE') {
             global $objPage;
