@@ -12,6 +12,13 @@
 
 
 /**
+ * Jobs
+ */
+$GLOBALS['TL_LANG']['tl_maintenance_jobs']['twig']    = array('Twig Cache leeren',
+                                                              'Leert den Twig Cache. Der Twig Cache kann durch aktivieren des (Twig) Debug Modus in den Backend-Einstellungen dauerhaft deaktiviert werden.');
+
+
+/**
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_maintenance']['purgeTwigCache']   = 'Twig Cache löschen';

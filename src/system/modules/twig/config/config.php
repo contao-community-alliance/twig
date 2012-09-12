@@ -21,6 +21,50 @@ if (version_compare(VERSION,
      * Autoloader
      */
     Twig_Autoloader::register();
+
+    /**
+     * Purge jobs
+     */
+    $GLOBALS['TL_PURGE']['folders']['twig'] = array
+    (
+        'callback' => array('PurgeTwigCache', 'purge'),
+        'affected' => array('system/cache/twig')
+    );
+
+    if (Input::get('do') == 'maintenance') {
+        /**
+         * Scan the twig directory structure and add affected paths to TL_PURGE.
+         *
+         * @param $strDirectory
+         */
+        function scanTwigCacheDirectories($strDirectory) {
+            $blnHasFiles = false;
+            $arrFiles = scan(TL_ROOT . '/' . $strDirectory);
+
+            // Walk over the children
+            foreach ($arrFiles as $strPath) {
+                $strPath = $strDirectory . '/' . $strPath;
+
+                // Add directory and scan it
+                if (is_dir(TL_ROOT . '/' . $strPath)) {
+                    $GLOBALS['TL_PURGE']['folders']['twig']['affected'][] = $strPath;
+                    scanTwigCacheDirectories($strPath);
+                }
+
+                // Remember that directory contains files
+                else {
+                    $blnHasFiles = true;
+                }
+            }
+
+            // Remove directories that only contains structure
+            if (!$blnHasFiles) {
+                $intPos = array_search($strDirectory, $GLOBALS['TL_PURGE']['folders']['twig']['affected']);
+                unset($GLOBALS['TL_PURGE']['folders']['twig']['affected'][$intPos]);
+            }
+        }
+        scanTwigCacheDirectories('system/cache/twig');
+    }
 }
 
 // Contao 2
@@ -33,9 +77,9 @@ else {
                           true);
     spl_autoload_register('__autoload',
                           true);
-}
 
-/**
- * Maintenance
- */
-$GLOBALS['TL_MAINTENANCE'][] = 'PurgeTwigCache';
+    /**
+     * Maintenance
+     */
+    $GLOBALS['TL_MAINTENANCE'][] = 'PurgeTwigCache';
+}
