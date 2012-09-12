@@ -10,15 +10,30 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-include(TL_ROOT . '/plugins/twig/lib/Twig/Autoloader.php');
-// Twig_Autoloader::register();
-ini_set('unserialize_callback_func',
-        'spl_autoload_call');
-spl_autoload_register(array(new Twig_Autoloader, 'autoload'),
-                      true,
-                      true);
-spl_autoload_register('__autoload',
-                      true);
+require_once(TL_ROOT . '/system/modules/twig/vendor/twig/lib/Twig/Autoloader.php');
+
+// Contao 3
+if (version_compare(VERSION,
+                    '3',
+                    '>=')
+) {
+    /**
+     * Autoloader
+     */
+    Twig_Autoloader::register();
+}
+
+// Contao 2
+else {
+    // Twig_Autoloader::register();
+    ini_set('unserialize_callback_func',
+            'spl_autoload_call');
+    spl_autoload_register(array(new Twig_Autoloader, 'autoload'),
+                          true,
+                          true);
+    spl_autoload_register('__autoload',
+                          true);
+}
 
 /**
  * Maintenance

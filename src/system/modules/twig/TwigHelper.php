@@ -47,10 +47,8 @@ class TwigHelper extends Controller
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getTemplateGroup($strPrefix, $intTheme=0)
+	public static function getTemplateGroup($strPrefix, $intTheme=0)
 	{
-        $this->import('Database');
-
 		$arrFolders = array();
 		$arrTemplates = array();
 
@@ -60,9 +58,9 @@ class TwigHelper extends Controller
 		// Add the theme templates folder
 		if ($intTheme > 0)
 		{
-			$objTheme = $this->Database->prepare("SELECT templates FROM tl_theme WHERE id=?")
-									   ->limit(1)
-									   ->execute($intTheme);
+			$objTheme = Database::getInstance()->prepare("SELECT templates FROM tl_theme WHERE id=?")
+									           ->limit(1)
+									           ->execute($intTheme);
 
 			if ($objTheme->numRows > 0 && $objTheme->templates != '')
 			{
@@ -71,7 +69,7 @@ class TwigHelper extends Controller
 		}
 
 		// Add the module templates folders if they exist
-		foreach ($this->Config->getActiveModules() as $strModule)
+		foreach (Config::getInstance()->getActiveModules() as $strModule)
 		{
 			$strFolder = TL_ROOT . '/system/modules/' . $strModule . '/templates';
 

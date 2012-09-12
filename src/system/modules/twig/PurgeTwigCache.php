@@ -22,6 +22,13 @@ class PurgeTwigCache
     extends Backend
     implements executable
 {
+    protected function __construct()
+    {
+        parent::__construct();
+
+        $this->import('Files');
+    }
+
     /**
      * Return true if the module is active
      * @return boolean
@@ -101,7 +108,7 @@ class PurgeTwigCache
 
         // Add log entry
         $this->log('Purged twig cache directory',
-                   'PurgeImages purgeImagesFolder()',
+                   'PurgeTwigCache purge',
                    TL_CRON);
 
         return $intCount;

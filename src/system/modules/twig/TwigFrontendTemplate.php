@@ -21,18 +21,11 @@
 class TwigFrontendTemplate
     extends FrontendTemplate
 {
-    /**
-     * @var ContaoTwig
-     */
-    protected $ContaoTwig;
-
     public function __construct($strTemplate = '',
                                 $strContentType = 'text/html')
     {
         parent::__construct($strTemplate,
                             $strContentType);
-
-        $this->import('ContaoTwig');
     }
 
     /**
@@ -66,7 +59,7 @@ class TwigFrontendTemplate
         }
 
         $strFile   = $this->strTemplate . '.' . $this->strFormat . '.twig';
-        $strBuffer = $this->ContaoTwig
+        $strBuffer = ContaoTwig::getInstance()
             ->getEnvironment()
             ->render($strFile,
                      $this->arrData);
