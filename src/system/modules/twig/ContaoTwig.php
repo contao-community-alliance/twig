@@ -179,6 +179,9 @@ class ContaoTwig
         $this->environment->addFilter('image',
                                       new Twig_Filter_Function('ContaoTwig::_addImage'),
                                                                array('is_safe' => array('html')));
+        $this->environment->addFunction('messages',
+                                        new Twig_Function_Function('ContaoTwig::_getMessages'),
+                                                                   array('is_safe' => array('html')));
 
         // HOOK: custom twig initialisation
         if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
@@ -363,5 +366,15 @@ class ContaoTwig
             ->generateImage($src,
                             $alt,
                             $attributes);
+    }
+
+    /**
+     * Get all messages as string.
+     */
+    public static function _getMessages($arguments = array())
+    {
+        return self::getInstance()->getMessages(
+            isset($arguments[0]) ? $arguments[0] : false,
+            isset($arguments[1]) ? $arguments[1] : false);
     }
 }
