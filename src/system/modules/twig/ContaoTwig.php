@@ -19,7 +19,7 @@
  * @author  Tristan Lins <tristan.lins@infinitysoft.de>
  */
 class ContaoTwig
-    extends System
+    extends Controller
 {
     /**
      * @var ContaoTwig
@@ -172,6 +172,14 @@ class ContaoTwig
         $this->environment->addFilter('query',
                                       new Twig_Filter_Function('ContaoTwig::queryFilter'));
 
+        // Add some content functions and filters
+        $this->environment->addFunction('image',
+                                        new Twig_Function_Function('ContaoTwig::_addImage'),
+                                                                   array('is_safe' => array('html')));
+        $this->environment->addFilter('image',
+                                      new Twig_Filter_Function('ContaoTwig::_addImage'),
+                                                               array('is_safe' => array('html')));
+
         // HOOK: custom twig initialisation
         if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeTwig'] as $callback) {
@@ -315,5 +323,45 @@ class ContaoTwig
         return Database::getInstance()
             ->query($statement)
             ->fetchAllAssoc();
+    }
+
+    /**
+     * Add an image
+     */
+    public static function _addImage($arguments)
+    {
+        if (is_array($arguments) && is_array($arguments[1])) {
+            $src        = $arguments[0];
+            $width      = $arguments[1]['width'];
+            $height     = $arguments[1]['height'];
+            $mode       = $arguments[1]['mode'];
+            $alt        = $arguments[1]['alt'];
+            $attributes = $arguments[1]['attributes'];
+        }
+
+        else if (is_array($arguments)) {
+            list($src, $width, $height, $mode, $alt, $attributes) = $arguments;
+        }
+
+        else {
+            $src        = $arguments;
+            $width      = '';
+            $height     = '';
+            $alt        = '';
+            $attributes = '';
+        }
+
+        if ($width || $height) {
+            $src = self::getInstance()
+                ->getImage($src,
+                           $width,
+                           $height,
+                           $mode);
+        }
+
+        return self::getInstance()
+            ->generateImage($src,
+                            $alt,
+                            $attributes);
     }
 }
