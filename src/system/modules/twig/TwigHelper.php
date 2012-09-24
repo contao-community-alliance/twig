@@ -18,7 +18,7 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@infinitysoft.de>
  */
-class TwigHelper extends Controller
+class TwigHelper
 {
     /**
      * Singleton instance.
