@@ -130,7 +130,8 @@ class ContaoTwig
             $this->loader,
             array(
                  'cache' => TL_ROOT . '/system/cache/twig',
-                 'debug' => $blnDebug
+                 'debug' => $blnDebug,
+                 'autoescape' => false
             )
         );
 
