@@ -158,19 +158,19 @@ class ContaoTwig
         $this->environment->addFilter('standardize',
                                       new Twig_Filter_Function('standardize'));
         $this->environment->addFilter('dateFormat',
-                                      new Twig_Filter_Function('ContaoTwig::parseDateFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_parseDateFilter'));
         $this->environment->addFilter('datimFormat',
-                                      new Twig_Filter_Function('ContaoTwig::parseDatimFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_parseDatimFilter'));
 
         // Add database access filters
         $this->environment->addFilter('prepare',
-                                      new Twig_Filter_Function('ContaoTwig::prepareFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_prepareFilter'));
         $this->environment->addFilter('set',
-                                      new Twig_Filter_Function('ContaoTwig::setFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_setFilter'));
         $this->environment->addFilter('execute',
-                                      new Twig_Filter_Function('ContaoTwig::executeFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_executeFilter'));
         $this->environment->addFilter('query',
-                                      new Twig_Filter_Function('ContaoTwig::queryFilter'));
+                                      new Twig_Filter_Function('ContaoTwig::_queryFilter'));
 
         // Add some content functions and filters
         $this->environment->addFunction('image',
@@ -231,7 +231,7 @@ class ContaoTwig
      *
      * @return string
      */
-    public static function parseDateFilter($timestamp)
+    public static function _parseDateFilter($timestamp)
     {
         return self::getInstance()
             ->parseDate($GLOBALS['TL_CONFIG']['dateFormat'],
@@ -247,7 +247,7 @@ class ContaoTwig
      *
      * @return string
      */
-    public static function parseDatimFilter($timestamp)
+    public static function _parseDatimFilter($timestamp)
     {
         return self::getInstance()
             ->parseDate($GLOBALS['TL_CONFIG']['datimFormat'],
@@ -263,7 +263,7 @@ class ContaoTwig
      *
      * @return Database_Statement
      */
-    public static function prepareFilter($sql)
+    public static function _prepareFilter($sql)
     {
         return Database::getInstance()
             ->prepare($sql);
@@ -279,7 +279,7 @@ class ContaoTwig
      *
      * @return Database_Statement
      */
-    public static function setFilter(Database_Statement $statement,
+    public static function _setFilter(Database_Statement $statement,
                                      array $arguments)
     {
         return $statement->set($arguments);
@@ -295,7 +295,7 @@ class ContaoTwig
      *
      * @return Database_Result
      */
-    public static function executeFilter($statement,
+    public static function _executeFilter($statement,
                                          array $arguments = array())
     {
         if ($statement instanceof Database_Statement) {
@@ -321,7 +321,7 @@ class ContaoTwig
      *
      * @return Database_Result
      */
-    public static function queryFilter($statement)
+    public static function _queryFilter($statement)
     {
         return Database::getInstance()
             ->query($statement)
