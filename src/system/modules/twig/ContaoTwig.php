@@ -178,6 +178,8 @@ class ContaoTwig
         $this->environment->addFilter('image',
                                       new Twig_Filter_Function('ContaoTwig::_addImage'));
         $this->environment->addFunction('messages',
+                                        new Twig_Function_Function('ContaoTwig::_getMessages'));
+        $this->environment->addFilter('vformat', new Twig_Filter_Function('ContaoTwig::_vformat'));
 
         // HOOK: custom twig initialisation
         if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
@@ -372,5 +374,13 @@ class ContaoTwig
         return self::getInstance()->getMessages(
             isset($arguments[0]) ? $arguments[0] : false,
             isset($arguments[1]) ? $arguments[1] : false);
+    }
+
+    /**
+     * Format with an array
+     */
+    public static function _vformat($format, $arguments)
+    {
+        return vsprintf($format, (array)$arguments);
     }
 }
