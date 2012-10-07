@@ -174,14 +174,10 @@ class ContaoTwig
 
         // Add some content functions and filters
         $this->environment->addFunction('image',
-                                        new Twig_Function_Function('ContaoTwig::_addImage'),
-                                                                   array('is_safe' => array('html')));
+                                        new Twig_Function_Function('ContaoTwig::_addImage'));
         $this->environment->addFilter('image',
-                                      new Twig_Filter_Function('ContaoTwig::_addImage'),
-                                                               array('is_safe' => array('html')));
+                                      new Twig_Filter_Function('ContaoTwig::_addImage'));
         $this->environment->addFunction('messages',
-                                        new Twig_Function_Function('ContaoTwig::_getMessages'),
-                                                                   array('is_safe' => array('html')));
 
         // HOOK: custom twig initialisation
         if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
