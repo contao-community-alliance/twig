@@ -22,6 +22,26 @@ class PurgeTwigCache
     extends Backend
     implements executable
 {
+    /**
+     * Singleton instance.
+     *
+     * @var PurgeTwigCache
+     */
+    protected static $objInstance = null;
+
+    /**
+     * Get singleton instance.
+     *
+     * @return PurgeTwigCache
+     */
+    public static function getInstance()
+    {
+        if (self::$objInstance === null) {
+            self::$objInstance = new PurgeTwigCache();
+        }
+        return self::$objInstance;
+    }
+
     protected function __construct()
     {
         parent::__construct();
