@@ -64,7 +64,7 @@ class TwigCustomPagination
         $this->intPage = -1;
         $strRequest    = rawurldecode($this->Environment->request);
         foreach ($this->arrLinks as $intPage => $strLink) {
-            if ($strRequest == $strLink) {
+            if ($strRequest == rawurldecode($strLink)) {
                 $this->intPage = $intPage + 1;
                 break;
             }
