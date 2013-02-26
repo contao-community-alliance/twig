@@ -72,11 +72,9 @@ else {
     // Twig_Autoloader::register();
     ini_set('unserialize_callback_func',
             'spl_autoload_call');
-    spl_autoload_register(array(new Twig_Autoloader, 'autoload'),
-                          true,
-                          true);
-    spl_autoload_register('__autoload',
-                          true);
+	spl_autoload_unregister('__autoload');
+    Twig_Autoloader::register();
+    spl_autoload_register('__autoload');
 
     /**
      * Maintenance
