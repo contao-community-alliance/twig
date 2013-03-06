@@ -1,0 +1,43 @@
+{
+	"name":"bit3/contao-twig",
+	"description":"Twig integration for Contao OpenSource CMS",
+	"version":"1.0.0",
+	"keywords":["contao", "theme", "twig", "template"],
+	"type":"contao-module",
+	"homepage":"http://bit3.de",
+	"license":"LGPL-3.0+",
+	"authors":[
+		{
+			"name":"Tristan Lins",
+			"email":"tristan.lins@bit3.de",
+			"homepage":"http://bit3.de",
+			"role":"Developer"
+		}
+	],
+	"support":{
+		"email":"info@bit3.de",
+		"issues":"https://github.com/bit3/contao-twig/issues",
+		"wiki":"https://github.com/bit3/contao-twig/wiki",
+		"irc":"irc://irc.freenode.org/contao.dev",
+		"source":"https://github.com/bit3/contao-twig"
+	},
+	"require":{
+		"php":">=5.3",
+		"contao/core":"2.11.*,3.*",
+		"twig/twig":"1.*"
+	},
+	"require-dev":{
+		"squizlabs/php_codesniffer":"1.*",
+		"bit3/php-coding-standard":"@dev"
+	},
+	"autoload":{
+		"classmap": ["src/"]
+	},
+	"extra":{
+		"contao": {
+			"symlinks":{
+				"contao":"system/modules/twig"
+			}
+		}
+	}
+}
