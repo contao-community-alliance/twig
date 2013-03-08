@@ -23,7 +23,7 @@
 	},
 	"require":{
 		"php":">=5.3",
-		"contao/core":"2.11.*,3.*",
+		"contao/core":">=2.11,<4",
 		"twig/twig":"1.*"
 	},
 	"require-dev":{
