@@ -1,8 +1,8 @@
 {
 	"name":"bit3/contao-twig",
 	"description":"Twig integration for Contao OpenSource CMS",
-	"version":"1.0.0",
 	"keywords":["contao", "theme", "twig", "template"],
+	"version":"1.3.0",
 	"type":"contao-module",
 	"homepage":"http://bit3.de",
 	"license":"LGPL-3.0+",
