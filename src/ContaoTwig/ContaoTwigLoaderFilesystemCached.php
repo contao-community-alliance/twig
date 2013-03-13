@@ -38,7 +38,7 @@ class ContaoTwigLoaderFilesystemCached
 	 *
 	 * @param string $path A path where to look for templates
 	 */
-	public function addPath($path)
+	public function addPath($path, $namespace = '__main__')
 	{
 		if (!is_dir($path)) {
 			throw new Twig_Error_Loader(sprintf(
