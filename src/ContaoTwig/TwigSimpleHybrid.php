@@ -22,7 +22,10 @@
 abstract class TwigSimpleHybrid
 	extends TwigHybrid
 {
-	public function __construct(Database_Result $objElement)
+	/**
+	 * @param Database_Result|\Model\Collection $objElement
+	 */
+	public function __construct($objElement)
 	{
 		parent::__construct($objElement);
 
