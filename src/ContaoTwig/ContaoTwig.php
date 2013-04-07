@@ -115,17 +115,7 @@ class ContaoTwig
 		}
 
 		// Create the default filesystem loader
-		if (version_compare(
-			VERSION,
-			'3',
-			'<'
-		)
-		) {
-			$this->loaderFilesystem = new ContaoTwigLoaderFilesystemCached($arrTemplatePaths);
-		}
-		else {
-			$this->loaderFilesystem = new Twig_Loader_Filesystem($arrTemplatePaths);
-		}
+		$this->loaderFilesystem = new Twig_Loader_Filesystem($arrTemplatePaths);
 
 		// Create the effective chain loader
 		$this->loader = new Twig_Loader_Chain();
