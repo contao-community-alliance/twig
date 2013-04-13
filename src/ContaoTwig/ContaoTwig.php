@@ -41,6 +41,13 @@ class ContaoTwig
 	}
 
 	/**
+	 * The array template loader.
+	 *
+	 * @var Twig_Loader_Array
+	 */
+	protected $loaderArray;
+
+	/**
 	 * The filesystem template loader.
 	 *
 	 * @var Twig_Loader_Filesystem
@@ -114,13 +121,17 @@ class ContaoTwig
 			}
 		}
 
+		// Create the default array loader
+		$this->loaderArray = new Twig_Loader_Array(array());
+
 		// Create the default filesystem loader
 		$this->loaderFilesystem = new Twig_Loader_Filesystem($arrTemplatePaths);
 
 		// Create the effective chain loader
 		$this->loader = new Twig_Loader_Chain();
 
-		// Register the default filesystem loader
+		// Register the default filesystem loaders
+		$this->loader->addLoader($this->loaderArray);
 		$this->loader->addLoader($this->loaderFilesystem);
 
 		// Create the environment
@@ -252,6 +263,16 @@ class ContaoTwig
 				$this->$callback[0]->$callback[1]($this);
 			}
 		}
+	}
+
+	/**
+	 * Return the default string loader.
+	 *
+	 * @return \Twig_Loader_Array
+	 */
+	public function getLoaderArray()
+	{
+		return $this->loaderArray;
 	}
 
 	/**

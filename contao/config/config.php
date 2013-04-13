@@ -75,3 +75,14 @@ else {
 if (!file_exists(TL_ROOT . '/system/cache/twig')) {
 	mkdir(TL_ROOT . '/system/cache/twig', 0777, true);
 }
+
+/**
+ * Content elements
+ */
+$GLOBALS['TL_CTE']['texts']['twig'] = 'ContentTwig';
+
+
+/**
+ * Front end modules
+ */
+$GLOBALS['FE_MOD']['miscellaneous']['twig'] = 'ModuleTwig';
