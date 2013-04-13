@@ -133,6 +133,13 @@ class ContaoTwig
 			)
 		);
 
+		// set default formats
+		$this->environment->getExtension('core')->setNumberFormat(2, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
+
+		// set default date format and timezone
+		$this->environment->getExtension('core')->setDateFormat($GLOBALS['TL_CONFIG']['datimFormat']);
+		$this->environment->getExtension('core')->setTimezone('Europe/Paris');
+
 		// Add debug extension
 		if ($blnDebug || $GLOBALS['TL_CONFIG']['twigDebugExtension']) {
 			$this->environment->addExtension(new Twig_Extension_Debug());
