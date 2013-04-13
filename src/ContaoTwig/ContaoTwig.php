@@ -236,7 +236,14 @@ class ContaoTwig
 			'messages',
 			new Twig_Function_Function('ContaoTwig::_getMessages')
 		);
-		$this->environment->addFilter('vformat', new Twig_Filter_Function('ContaoTwig::_vformat'));
+		$this->environment->addFilter(
+			'vformat',
+			new Twig_Filter_Function('ContaoTwig::_vformat')
+		);
+		$this->environment->addFilter(
+			'url',
+			new Twig_Filter_Function('ContaoTwig::_generateUrl')
+		);
 
 		// HOOK: custom twig initialisation
 		if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
@@ -451,5 +458,37 @@ class ContaoTwig
 	public static function _vformat($format, $arguments)
 	{
 		return vsprintf($format, (array) $arguments);
+	}
+
+	/**
+	 * Generate a frontend url
+	 */
+	public static function _generateUrl($page, $params = null, $language = null)
+	{
+		if ($page instanceof Database_Result || $page instanceof \Database\Result) {
+			$page = $page->row();
+		}
+		else if ($page instanceof \Model\Collection) {
+			$page = $page->current()->row();
+		}
+		else if ($page instanceof Model) {
+			$page = $page->row();
+		}
+		else if (is_numeric($page)) {
+			$page = Database::getInstance()
+				->prepare('SELECT * FROM tl_page WHERE id=?')
+				->execute($page)
+				->fetchAssoc();
+		}
+
+		if (!is_array($page)) {
+			return '';
+		}
+
+		return self::getInstance()->generateFrontendUrl(
+			$page,
+			$params,
+			$language
+		);
 	}
 }
