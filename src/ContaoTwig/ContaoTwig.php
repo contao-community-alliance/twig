@@ -163,8 +163,28 @@ class ContaoTwig
 			new ContaoTwigGlobalAccessObject('TL_CONFIG')
 		);
 		$this->environment->addGlobal(
+			'_env',
+			new ContaoTwigEnvironmentAccessObject()
+		);
+		$this->environment->addGlobal(
 			'_db',
 			Database::getInstance()
+		);
+		$this->environment->addGlobal(
+			'_page',
+			$GLOBALS['objPage']
+		);
+		$this->environment->addGlobal(
+			'_member',
+			TL_MODE == 'FE' && FE_USER_LOGGED_IN
+				? FrontendUser::getInstance()
+				: false
+		);
+		$this->environment->addGlobal(
+			'_user',
+			TL_MODE == 'BE' && BE_USER_LOGGED_IN
+				? BackendUser::getInstance()
+				: false
 		);
 
 		// Add some filters
