@@ -116,7 +116,6 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 	{
 		return array(
 			'image' => new Twig_Function_Function(array($this, '_addImage')),
-			'image' => new Twig_Filter_Function(array($this, '_addImage')),
 			'messages' => new Twig_Function_Function(array($this, '_getMessages')),
 		);
 	}
