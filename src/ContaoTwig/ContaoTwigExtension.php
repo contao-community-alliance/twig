@@ -78,7 +78,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 
 	public function getGlobals()
 	{
-		return array (
+		$globals = array (
 			'REQUEST_TOKEN' => REQUEST_TOKEN,
 			'_lang' => new ContaoTwigGlobalAccessObject('TL_LANG'),
 			'_dca' => new ContaoTwigGlobalAccessObject('TL_DCA'),
@@ -93,6 +93,12 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 				? BackendUser::getInstance()
 				: false,
 		);
+
+		if (version_compare(VERSION, '3.1', '>=')) {
+			$globals['REFERER_ID'] = TL_REFERER_ID;
+		}
+
+		return $globals;
 	}
 
 	public function getFilters()
