@@ -53,7 +53,6 @@ class TwigHelper
 	public static function getTemplateGroup($strPrefix, $intTheme = 0)
 	{
 		$arrFolders   = array();
-		$arrTemplates = array();
 
 		// Add the templates root directory
 		$arrFolders[] = TL_ROOT . '/templates';
@@ -81,6 +80,22 @@ class TwigHelper
 				$arrFolders[] = $strFolder;
 			}
 		}
+
+		return static::getTemplateGroupInFolders($strPrefix, $arrFolders);
+	}
+
+	/**
+	 * Return all template files of a particular group as array
+	 *
+	 * @param string
+	 * @param integer
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function getTemplateGroupInFolders($strPrefix, $arrFolders)
+	{
+		$arrTemplates = array();
 
 		// Find all matching templates
 		foreach ($arrFolders as $strFolder) {
