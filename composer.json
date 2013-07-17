@@ -37,6 +37,9 @@
 			"symlinks":{
 				"contao":"system/modules/twig"
 			}
+		},
+		"branch-alias": {
+			"dev-master": "1.6.x-dev"
 		}
 	}
 }
