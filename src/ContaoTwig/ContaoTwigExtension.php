@@ -315,8 +315,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 	/**
 	 * Add an image
 	 */
-	public function _addImage($arguments)
+	public function _addImage()
 	{
+		$arguments = func_get_args();
 		if (is_array($arguments) && is_array($arguments[1])) {
 			$src        = $arguments[0];
 			$width      = $arguments[1]['width'];
@@ -339,8 +340,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 		}
 
 		if ($width || $height) {
-			$src = $this
-				->getImage(
+			$src = $this->getImage(
 				$src,
 				$width,
 				$height,
@@ -348,8 +348,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			);
 		}
 
-		return $this
-			->generateImage(
+		return $this->generateImage(
 			$src,
 			$alt,
 			$attributes
