@@ -84,6 +84,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			'_dca' => new ContaoTwigGlobalAccessObject('TL_DCA'),
 			'_config' => new ContaoTwigGlobalAccessObject('TL_CONFIG'),
 			'_env' => new ContaoTwigEnvironmentAccessObject(),
+			'_referer' => new ContaoTwigRefererAccessObject(),
 			'_db' => Database::getInstance(),
 			'_page' => $GLOBALS['objPage'],
 			'_member' => TL_MODE == 'FE' && FE_USER_LOGGED_IN
