@@ -80,6 +80,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 	{
 		$globals = array (
 			'REQUEST_TOKEN' => REQUEST_TOKEN,
+			'_session' => new ContaoTwigGlobalAccessObject('_SESSION'),
 			'_lang' => new ContaoTwigGlobalAccessObject('TL_LANG'),
 			'_dca' => new ContaoTwigGlobalAccessObject('TL_DCA'),
 			'_config' => new ContaoTwigGlobalAccessObject('TL_CONFIG'),
