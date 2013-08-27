@@ -107,7 +107,7 @@ class PurgeTwigCache
 			$count,
 			$this->getReadableSize($size)
 		);
-		$objTemplate->action = ampersand($this->Environment->request);
+		$objTemplate->action = ampersand(\Environment::getInstance()->request);
 
 		return $objTemplate->parse();
 	}

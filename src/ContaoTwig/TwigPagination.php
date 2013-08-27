@@ -37,7 +37,7 @@ class TwigPagination
 		$this->strUrl = preg_replace(
 			array('#\?page=\d+&#i', '#\?page=\d+$#i', '#&(amp;)?page=\d+#i'),
 			array('?', '', ''),
-			$this->Environment->request
+			\Environment::getInstance()->request
 		);
 
 		$this->strVarConnector = strpos(
