@@ -32,12 +32,16 @@ class ContaoTwig
 	 * @static
 	 * @return ContaoTwig|Twig_Environment
 	 */
-	public static function getInstance()
+	public static function getInstance(ContaoTwigConfig $config = null)
 	{
-		if (self::$objInstance === null) {
-			self::$objInstance = new self;
+		if (!$config) {
+			$config = new ContaoTwigConfig();
 		}
-		return self::$objInstance;
+		$key = (string) $config;
+		if (self::$objInstance[$key] === null) {
+			self::$objInstance[$key] = new self($config);
+		}
+		return self::$objInstance[$key];
 	}
 
 	/**
@@ -71,29 +75,25 @@ class ContaoTwig
 	/**
 	 * Create the new twig contao environment
 	 */
-	protected function __construct()
+	protected function __construct(ContaoTwigConfig $config)
 	{
 		$arrTemplatePaths = array();
 
-		$blnDebug = $GLOBALS['TL_CONFIG']['debugMode'] || $GLOBALS['TL_CONFIG']['twigDebugMode'];
+		$blnDebug = $config->isAllowDebugMode() && ($GLOBALS['TL_CONFIG']['debugMode'] || $GLOBALS['TL_CONFIG']['twigDebugMode']);
 
 		// Make sure the cache directory exists
-		if (version_compare(
-			VERSION,
-			'2',
-			'<='
-		) && !is_dir(TL_ROOT . '/system/cache')
-		) {
-			Files::getInstance()
-				->mkdir('system/cache');
-		}
 		if (!is_dir(TL_ROOT . '/system/cache/twig')) {
+			if (!is_dir(TL_ROOT . '/system/cache')) {
+				Files::getInstance()
+					->mkdir('system/cache');
+			}
+
 			Files::getInstance()
 				->mkdir('system/cache/twig');
 		}
 
 		// Add the layout templates directory
-		if (TL_MODE == 'FE') {
+		if ($config->isEnableThemeTemplatesLoader() && TL_MODE == 'FE') {
 			global $objPage;
 			$strTemplateGroup = str_replace(
 				array('../', 'templates/'),
@@ -107,32 +107,38 @@ class ContaoTwig
 		}
 
 		// Add the global templates directory
-		$arrTemplatePaths[] = TL_ROOT . '/templates';
-
-		// Add all modules templates directories
-		foreach (
-			Config::getInstance()
-				->getActiveModules() as $strModule
-		) {
-			$strPath = TL_ROOT . '/system/modules/' . $strModule . '/templates';
-
-			if (is_dir($strPath)) {
-				$arrTemplatePaths[] = $strPath;
-			}
+		if ($config->isEnableGlobalTemplatesLoader()) {
+			$arrTemplatePaths[] = TL_ROOT . '/templates';
 		}
 
-		// Create the default array loader
-		$this->loaderArray = new Twig_Loader_Array(array());
+		// Add all modules templates directories
+		if ($config->isEnableModuleTemplatesLoader()) {
+			foreach (
+				Config::getInstance()
+					->getActiveModules() as $strModule
+			) {
+				$strPath = TL_ROOT . '/system/modules/' . $strModule . '/templates';
 
-		// Create the default filesystem loader
-		$this->loaderFilesystem = new Twig_Loader_Filesystem($arrTemplatePaths);
+				if (is_dir($strPath)) {
+					$arrTemplatePaths[] = $strPath;
+				}
+			}
+		}
 
 		// Create the effective chain loader
 		$this->loader = new Twig_Loader_Chain();
 
-		// Register the default filesystem loaders
-		$this->loader->addLoader($this->loaderArray);
-		$this->loader->addLoader($this->loaderFilesystem);
+		// Create the default array loader
+		if ($config->isEnableArrayLoader()) {
+			$this->loaderArray = new Twig_Loader_Array(array());
+			$this->loader->addLoader($this->loaderArray);
+		}
+
+		// Create the default filesystem loader
+		if ($config->isEnableFilesystemLoader()) {
+			$this->loaderFilesystem = new Twig_Loader_Filesystem($arrTemplatePaths);
+			$this->loader->addLoader($this->loaderFilesystem);
+		}
 
 		// Create the environment
 		$this->environment = new Twig_Environment(
@@ -140,26 +146,38 @@ class ContaoTwig
 			array(
 				'cache'      => TL_ROOT . '/system/cache/twig',
 				'debug'      => $blnDebug,
-				'autoescape' => false
+				'autoescape' => $config->isEnableAutoescape()
 			)
 		);
 
 		// set default formats
-		$this->environment->getExtension('core')->setNumberFormat(2, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
+		if ($config->isSetNumberFormat()) {
+			$this->environment->getExtension('core')->setNumberFormat(
+				2,
+				$GLOBALS['TL_LANG']['MSC']['decimalSeparator'],
+				$GLOBALS['TL_LANG']['MSC']['thousandsSeparator']
+			);
+		}
 
 		// set default date format and timezone
-		$this->environment->getExtension('core')->setDateFormat($GLOBALS['TL_CONFIG']['datimFormat']);
-		$this->environment->getExtension('core')->setTimezone('Europe/Paris');
+		if ($config->isSetDateFormat()) {
+			$this->environment->getExtension('core')->setDateFormat($GLOBALS['TL_CONFIG']['datimFormat']);
+		}
+		if ($config->isSetTimeZone()) {
+			$this->environment->getExtension('core')->setTimezone($GLOBALS['TL_CONFIG']['timeZone']);
+		}
 
 		// Add debug extension
-		if ($blnDebug || $GLOBALS['TL_CONFIG']['twigDebugExtension']) {
+		if ($config->isAllowDebugMode() && ($blnDebug || $GLOBALS['TL_CONFIG']['twigDebugExtension'])) {
 			$this->environment->addExtension(new Twig_Extension_Debug());
 		}
 
-		$this->environment->addExtension(new ContaoTwigExtension());
+		if ($config->isEnableContaoExtension()) {
+			$this->environment->addExtension(new ContaoTwigExtension());
+		}
 
 		// HOOK: custom twig initialisation
-		if (isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
+		if ($config->isCallInitializationHook() && isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])) {
 			foreach ($GLOBALS['TL_HOOKS']['initializeTwig'] as $callback) {
 				$this->import($callback[0]);
 				$this->$callback[0]->$callback[1]($this);
