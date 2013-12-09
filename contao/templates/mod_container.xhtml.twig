@@ -1,4 +1,4 @@
-<div class="{{ class }} block"{{ cssID }}{% if style %} style="{{ style }}}"{% endif %}{% block attributes %}{% endblock %}>
+<{% block element %}div{% endblock %} class="{{ class }} block"{{ cssID }}{% if style %} style="{{ style }}}"{% endif %}{% block attributes %}{% endblock %}>
     {% block headline %}
     {% if headline %}
 
@@ -7,4 +7,4 @@
     {% endblock %}
 
     {% block content %}{% endblock %}
-</div>
+</{{ block('element') }}>
