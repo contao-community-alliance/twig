@@ -183,6 +183,10 @@ class ContaoTwig
 				$this->$callback[0]->$callback[1]($this);
 			}
 		}
+
+		/** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
+		$eventDispatcher = $GLOBALS['container']['event-dispatcher'];
+		$eventDispatcher->dispatch('contao-twig.init', new ContaoTwigInitializeEvent($this));
 	}
 
 	/**
