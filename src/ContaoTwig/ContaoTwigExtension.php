@@ -341,6 +341,16 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			$attributes = '';
 		}
 
+		if (version_compare(VERSION, '3', '>=')) {
+			$file = FilesModel::findByPk($src);
+
+			if (!$file) {
+				return '';
+			}
+
+			$src = $file->path;
+		}
+
 		if ($width || $height) {
 			$src = $this->getImage(
 				$src,
