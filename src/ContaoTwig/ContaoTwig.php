@@ -105,6 +105,15 @@ class ContaoTwig
 				$arrTemplatePaths[] = TL_ROOT . '/templates/' . $strTemplateGroup;
 			}
 		}
+		else if (TL_MODE == 'BE') {
+			$themeCollection = \ThemeModel::findAll();
+
+			while ($themeCollection->next()) {
+				if ($themeCollection->templates) {
+					$arrTemplatePaths[] = TL_ROOT . '/' . $themeCollection->templates;
+				}
+			}
+		}
 
 		// Add the global templates directory
 		if ($config->isEnableGlobalTemplatesLoader()) {
