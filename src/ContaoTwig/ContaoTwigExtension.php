@@ -327,10 +327,12 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			$mode       = $arguments[1]['mode'];
 			$alt        = $arguments[1]['alt'];
 			$attributes = $arguments[1]['attributes'];
+			$fallback   = $arguments[1]['fallback'];
 		}
 
 		else if (is_array($arguments)) {
 			list($src, $width, $height, $mode, $alt, $attributes) = $arguments;
+			$fallback = false;
 		}
 
 		else {
@@ -339,16 +341,24 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			$height     = '';
 			$alt        = '';
 			$attributes = '';
+			$fallback   = false;
 		}
 
 		if (version_compare(VERSION, '3', '>=')) {
 			$file = FilesModel::findByPk($src);
 
-			if (!$file) {
-				return '';
+			if ($file) {
+				$src = $file->path;
+			}
+		}
+
+		if (!ctype_print($src) || !file_exists($src)) {
+			if ($fallback) {
+				unset($arguments[1]['fallback']);
+				return $this->_addImage($fallback, $arguments[1]);
 			}
 
-			$src = $file->path;
+			return '';
 		}
 
 		if ($width || $height) {
