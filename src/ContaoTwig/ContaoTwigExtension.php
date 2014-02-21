@@ -352,7 +352,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			}
 		}
 
-		if (!ctype_print($src) || !file_exists($src)) {
+		if (!ctype_print($src) || !file_exists(TL_ROOT . '/' . $src)) {
 			if ($fallback) {
 				unset($arguments[1]['fallback']);
 				return $this->_addImage($fallback, $arguments[1]);
