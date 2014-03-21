@@ -50,38 +50,36 @@ class TwigHelper
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function getTemplateGroup($strPrefix, $intTheme = 0)
+	public static function getTemplateGroup($prefix, $themeId = 0)
 	{
-		$arrFolders   = array();
+		$folders = array();
 
 		// Add the templates root directory
-		$arrFolders[] = TL_ROOT . '/templates';
+		$folders['/templates'] = TL_ROOT . '/templates';
 
 		// Add the theme templates folder
-		if ($intTheme > 0) {
-			$objTheme = Database::getInstance()
+		if ($themeId > 0) {
+			$resultSet = Database::getInstance()
 				->prepare("SELECT templates FROM tl_theme WHERE id=?")
 				->limit(1)
-				->execute($intTheme);
+				->execute($themeId);
 
-			if ($objTheme->numRows > 0 && $objTheme->templates != '') {
-				$arrFolders[] = TL_ROOT . '/' . $objTheme->templates;
+			if ($resultSet->numRows > 0 && $resultSet->templates != '') {
+				$folders[$resultSet->title] = TL_ROOT . '/' . $resultSet->templates;
 			}
 		}
 
 		// Add the module templates folders if they exist
-		foreach (
-			Config::getInstance()
-				->getActiveModules() as $strModule
-		) {
-			$strFolder = TL_ROOT . '/system/modules/' . $strModule . '/templates';
+		$activeModules = Config::getInstance()->getActiveModules();
+		foreach ($activeModules as $module) {
+			$folder = TL_ROOT . '/system/modules/' . $module . '/templates';
 
-			if (is_dir($strFolder)) {
-				$arrFolders[] = $strFolder;
+			if (is_dir($folder)) {
+				$folders['system/modules/' . $module] = $folder;
 			}
 		}
 
-		return static::getTemplateGroupInFolders($strPrefix, $arrFolders);
+		return static::getTemplateGroupInFolders($prefix, $folders);
 	}
 
 	/**
@@ -93,23 +91,40 @@ class TwigHelper
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function getTemplateGroupInFolders($strPrefix, $arrFolders)
+	public static function getTemplateGroupInFolders($prefix, $folders)
 	{
-		$arrTemplates = array();
+		$templates = array();
 
 		// Find all matching templates
-		foreach ($arrFolders as $strFolder) {
-			$arrFiles = preg_grep('/^' . preg_quote($strPrefix, '/') . '.*\.twig$/i', scan($strFolder));
+		foreach ($folders as $sourceName => $folder) {
+			$iterator = new RecursiveDirectoryIterator(
+				$folder,
+				RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::UNIX_PATHS
+			);
+			$iterator = new RecursiveIteratorIterator(
+				$iterator,
+				RecursiveIteratorIterator::LEAVES_ONLY
+			);
+			$iterator = new RegexIterator(
+				$iterator,
+				'~(^|/)' . preg_quote($prefix, '~') . '.*\.twig$~i'
+			);
+			/** @var RecursiveDirectoryIterator|RecursiveIteratorIterator|RegexIterator $iterator */
+			$iterator->next();
 
-			foreach ($arrFiles as $strTemplate) {
-				$strName        = basename($strTemplate);
-				$arrTemplates[] = preg_replace('#\.[^\.]+\.twig$#', '', $strName);
+			while ($iterator->accept()) {
+				$templateName = $iterator->getSubPathname();
+				$templateName = preg_replace('#\.[^\.]+\.twig$#', '', $templateName);
+
+				$templates[$sourceName][$templateName] = $templateName;
+				uksort($templates[$sourceName], 'strnatcasecmp');
+
+				$iterator->next();
 			}
 		}
 
-		natcasesort($arrTemplates);
-		$arrTemplates = array_values(array_unique($arrTemplates));
+		uksort($templates, 'strnatcasecmp');
 
-		return $arrTemplates;
+		return $templates;
 	}
 }
