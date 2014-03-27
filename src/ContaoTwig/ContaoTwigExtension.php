@@ -117,6 +117,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			'query' => new Twig_Filter_Function(array($this, '_queryFilter')),
 			'vformat' => new Twig_Filter_Function(array($this, '_vformat')),
 			'url' => new Twig_Filter_Function(array($this, '_generateUrl')),
+			'image' => new Twig_Filter_Function(array($this, '_addImage')),
 		);
 	}
 
