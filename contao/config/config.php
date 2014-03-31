@@ -86,3 +86,11 @@ $GLOBALS['TL_CTE']['texts']['twig'] = 'ContentTwig';
  * Front end modules
  */
 $GLOBALS['FE_MOD']['miscellaneous']['twig'] = 'ModuleTwig';
+
+
+$GLOBALS['SYC_CONFIG']['local_blacklist'] = array_merge( (array) $GLOBALS['SYC_CONFIG']['local_blacklist'],
+        array(
+            'twigDebugExtension',
+            'twigDebugMode'
+        )
+);
