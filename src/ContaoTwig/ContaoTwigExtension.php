@@ -214,6 +214,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 	 */
 	public function _parseDateFilter($timestamp)
 	{
+		if ($timestamp instanceof \DateTime) {
+			$timestamp = $timestamp->getTimestamp();
+		}
 		return $this
 			->parseDate(
 			$GLOBALS['TL_CONFIG']['dateFormat'],
@@ -232,6 +235,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 	 */
 	public function _parseDatimFilter($timestamp)
 	{
+		if ($timestamp instanceof \DateTime) {
+			$timestamp = $timestamp->getTimestamp();
+		}
 		return $this
 			->parseDate(
 			$GLOBALS['TL_CONFIG']['datimFormat'],
