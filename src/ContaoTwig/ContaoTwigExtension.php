@@ -368,6 +368,13 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			return '';
 		}
 
+		$file = new File($src);
+		$intMaxWidth = (TL_MODE == 'BE') ? 320 : $GLOBALS['TL_CONFIG']['maxImageWidth'];
+		if ($intMaxWidth > 0 && ($width > $intMaxWidth || $file->width > $intMaxWidth)) {
+			$width = $intMaxWidth;
+			$height = null;
+		}
+
 		if ($width || $height) {
 			$src = $this->getImage(
 				$src,
