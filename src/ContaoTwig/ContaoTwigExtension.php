@@ -118,6 +118,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			'vformat' => new Twig_Filter_Function(array($this, '_vformat')),
 			'url' => new Twig_Filter_Function(array($this, '_generateUrl')),
 			'image' => new Twig_Filter_Function(array($this, '_addImage')),
+			'stringify' => new Twig_Filter_Function(array($this, '_stringify'), array('needs_environment' => true)),
 		);
 	}
 
@@ -441,5 +442,43 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			$params,
 			$language
 		);
+	}
+
+	/**
+	 * Stringify a value and make it human readable.
+	 *
+	 * @param $value
+	 */
+	public function _stringify(\Twig_Environment $env, $value)
+	{
+		if (is_object($value)) {
+			if ($value instanceof ArrayObject) {
+				$value = $value->getArrayCopy();
+			}
+			else if ($value instanceof \Doctrine\Common\Collections\Collection) {
+				$value = $value->toArray();
+			}
+			else if ($value instanceof DateTime) {
+				return $this->_dateFilter($env, $value);
+			}
+			else {
+				return '{' . get_class($value) . '}';
+			}
+		}
+		if (is_array($value)) {
+			$self = $this;
+			$values = array_map(function($value) use ($self, $env) { return $self->_stringify($env, $value); }, $value);
+			return '[' . implode(', ', $values) . ']';
+		}
+		if (is_null($value)) {
+			return 'NULL';
+		}
+		if (is_bool($value)) {
+			return $value ? 'true' : 'false';
+		}
+		if (is_double($value) && is_infinite($value)) {
+			return '&infin;';
+		}
+		return $value;
 	}
 }
