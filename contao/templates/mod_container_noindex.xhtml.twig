@@ -1,0 +1,12 @@
+<!-- indexer::stop -->
+<{% block element %}div{% endblock %} class="{{ class }} block"{{ cssID }}{% if style %} style="{{ style }}}"{% endif %}{% block attributes %}{% endblock %}>
+    {% block headline %}
+    {% if headline %}
+
+    <{{ hl }}>{{ headline }}</{{ hl }}>
+    {% endif %}
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+</{{ block('element') }}>
+<!-- indexer::continue -->
