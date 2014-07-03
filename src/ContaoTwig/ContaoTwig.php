@@ -108,9 +108,11 @@ class ContaoTwig
 		else if (TL_MODE == 'BE') {
 			$themeCollection = \ThemeModel::findAll();
 
-			while ($themeCollection->next()) {
-				if ($themeCollection->templates) {
-					$arrTemplatePaths[] = TL_ROOT . '/' . $themeCollection->templates;
+			if ($themeCollection) {
+				while ($themeCollection->next()) {
+					if ($themeCollection->templates) {
+						$arrTemplatePaths[] = TL_ROOT . '/' . $themeCollection->templates;
+					}
 				}
 			}
 		}
