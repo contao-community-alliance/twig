@@ -94,6 +94,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			'_user' => TL_MODE == 'BE' && BE_USER_LOGGED_IN
 				? BackendUser::getInstance()
 				: false,
+			'_theme' => TL_MODE == 'BE'
+				? \Backend::getTheme()
+				: false
 		);
 
 		if (version_compare(VERSION, '3.1', '>=')) {
@@ -127,6 +130,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 		return array(
 			'image' => new Twig_Function_Function(array($this, '_addImage')),
 			'messages' => new Twig_Function_Function(array($this, '_getMessages')),
+			'addToUrl' => new Twig_Function_Function(array($this, '_addToUrl')),
 		);
 	}
 
@@ -402,6 +406,22 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			isset($arguments[0]) ? $arguments[0] : false,
 			isset($arguments[1]) ? $arguments[1] : false
 		);
+	}
+
+	/**
+	 * @param string|array $parameters
+	 */
+	public function _addToUrl($parameters, $addRefererId = true, $unsetParameters = array())
+	{
+		if (is_array($parameters)) {
+			$parameters = http_build_query($parameters);
+		}
+
+		if (TL_MODE == 'BE') {
+			return \Backend::addToUrl($parameters, $addRefererId, $unsetParameters);
+		}
+
+		return \Controller::addToUrl($parameters, $addRefererId, $unsetParameters);
 	}
 
 	/**
