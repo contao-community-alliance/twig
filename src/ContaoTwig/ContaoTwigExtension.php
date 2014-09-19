@@ -94,6 +94,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 			'_user' => TL_MODE == 'BE' && BE_USER_LOGGED_IN
 				? BackendUser::getInstance()
 				: false,
+			'_theme' => TL_MODE == 'BE'
+				? \Backend::getTheme()
+				: false
 		);
 
 		if (version_compare(VERSION, '3.1', '>=')) {

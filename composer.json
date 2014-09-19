@@ -22,7 +22,7 @@
 	},
 	"require":{
 		"php":">=5.3",
-		"contao/core":">=2.11,<4",
+		"contao/core":"~3.2",
 		"contao-community-alliance/composer-installer": "*",
 		"contao-community-alliance/event-dispatcher":"~1",
 		"twig/twig":"1.*"
