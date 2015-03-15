@@ -136,8 +136,8 @@ class TwigTemplate
 			is_array($GLOBALS['TL_HOOKS']['prepareTwigTemplate'])
 		) {
 			foreach ($GLOBALS['TL_HOOKS']['prepareTwigTemplate'] as $callback) {
-				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this);
+				$object = \System::importStatic($callback[0]);
+				$object->$callback[1]($this);
 			}
 		}
 
@@ -150,8 +150,8 @@ class TwigTemplate
 			is_array($GLOBALS['TL_HOOKS']['parseTwigTemplate'])
 		) {
 			foreach ($GLOBALS['TL_HOOKS']['parseTwigTemplate'] as $callback) {
-				$this->import($callback[0]);
-				$buffer = $this->$callback[0]->$callback[1](
+				$object = \System::importStatic($callback[0]);
+				$buffer = $object->$callback[1](
 					$buffer,
 					$context,
 					$this
