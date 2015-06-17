@@ -1,51 +1,55 @@
 {
-	"name":"bit3/contao-twig",
-	"description":"Twig integration for Contao OpenSource CMS",
-	"keywords":["contao", "theme", "twig", "template"],
-	"type":"contao-module",
-	"homepage":"http://bit3.de",
-	"license":"LGPL-3.0+",
-	"authors":[
-		{
-			"name":"Tristan Lins",
-			"email":"tristan.lins@bit3.de",
-			"homepage":"http://bit3.de",
-			"role":"Developer"
-		}
-	],
-	"support":{
-		"email":"info@bit3.de",
-		"issues":"https://github.com/bit3/contao-twig/issues",
-		"wiki":"https://github.com/bit3/contao-twig/wiki",
-		"irc":"irc://irc.freenode.org/contao.dev",
-		"source":"https://github.com/bit3/contao-twig"
-	},
-	"require":{
-		"php":">=5.3",
-		"contao/core":"~3.2",
-		"contao-community-alliance/composer-installer": "*",
-		"contao-community-alliance/event-dispatcher":"~1",
-		"twig/twig":"1.*"
-	},
-	"require-dev":{
-		"squizlabs/php_codesniffer":"1.*",
-		"bit3/php-coding-standard":"@dev"
-	},
-	"replace":{
-		"contao-legacy/twig":"self.version"
-	},
-	"autoload":{
-		"classmap": ["src/"]
-	},
-	"extra":{
-		"contao": {
-			"sources":{
-				"contao":"system/modules/twig"
-			}
-		},
-		"branch-alias": {
-			"dev-master": "1.11.x-dev",
-			"dev-develop": "1.12.x-dev"
-		}
-	}
+  "name": "contao-community-alliance/contao-twig",
+  "description": "Twig integration for Contao OpenSource CMS",
+  "keywords": [
+    "contao",
+    "theme",
+    "twig",
+    "template"
+  ],
+  "type": "contao-module",
+  "homepage": "http://c-c-a.org",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Christian Schiffler",
+      "email": "c.schiffler@cyberspectrum.de",
+      "homepage": "http://cyberspectrum.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "info@c-c-a.org",
+    "issues": "https://github.com/contao-community-alliance/twig/issues",
+    "wiki": "https://github.com/contao-community-alliance/twig/wiki",
+    "irc": "irc://irc.freenode.org/contao.dev",
+    "source": "https://github.com/contao-community-alliance/twig"
+  },
+  "require": {
+    "php": ">=5.3",
+    "contao/core": "~3.2",
+    "contao-community-alliance/composer-plugin": "~2.0",
+    "contao-community-alliance/event-dispatcher": "~1.0",
+    "twig/twig": "~1.0"
+  },
+  "require-dev": {
+    "phpcq/all-tasks": "~1.0"
+  },
+  "replace": {
+    "contao-legacy/twig": "self.version"
+  },
+  "autoload": {
+    "classmap": ["src/"]
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "contao": "system/modules/twig"
+      }
+    },
+    "branch-alias": {
+      "dev-master": "1.11.x-dev",
+      "dev-develop": "1.12.x-dev"
+    }
+  }
 }
