@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -19,70 +20,81 @@
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
 class TwigBackendTemplate
-	extends BackendTemplate
+    extends BackendTemplate
 {
-	public function __construct(
-		$strTemplate = '',
-		$strContentType = 'text/html'
-	) {
-		parent::__construct(
-			$strTemplate,
-			$strContentType
-		);
-	}
+    public function __construct(
+        $strTemplate = '',
+        $strContentType = 'text/html'
+    ) {
+        parent::__construct(
+            $strTemplate,
+            $strContentType
+        );
+    }
 
-	/**
-	 * @return string
-	 */
-	public function parse()
-	{
-		if ($this->strTemplate == '') {
-			return '';
-		}
+    /**
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function parse()
+    {
+        if ($this->strTemplate == '') {
+            return '';
+        }
 
-		// Override the output format in the front end
-		if (TL_MODE == 'FE') {
-			global $objPage;
+        // Override the output format in the front end
+        $this->overrideOutputFormatFrontend();
 
-			if ($objPage->outputFormat != '') {
-				$this->strFormat = $objPage->outputFormat;
-			}
+        // HOOK: add custom parse filters
+        if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate'])) {
+            foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback) {
+                $this->import($callback[0]);
+                $this->$callback[0]->$callback[1]($this);
+            }
+        }
 
-			$this->strTagEnding = ($this->strFormat == 'xhtml')
-				? ' />'
-				: '>';
-		}
+        $strFile   = $this->strTemplate . '.' . $this->strFormat . '.twig';
+        $strBuffer = ContaoTwig::getInstance()
+            ->getEnvironment()
+            ->render(
+                $strFile,
+                $this->arrData
+            );
 
-		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate'])) {
-			foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback) {
-				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this);
-			}
-		}
+        // HOOK: add custom parse filters
+        if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && is_array(
+                $GLOBALS['TL_HOOKS']['parseBackendTemplate']
+            )
+        ) {
+            foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback) {
+                $this->import($callback[0]);
+                $strBuffer = $this->$callback[0]->$callback[1](
+                    $strBuffer,
+                    $this->strTemplate
+                );
+            }
+        }
 
-		$strFile = $this->strTemplate . '.' . $this->strFormat . '.twig';
-		$strBuffer = ContaoTwig::getInstance()
-			->getEnvironment()
-			->render(
-			$strFile,
-			$this->arrData
-		);
+        return $strBuffer;
+    }
 
-		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && is_array(
-			$GLOBALS['TL_HOOKS']['parseBackendTemplate']
-		)
-		) {
-			foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback) {
-				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1](
-					$strBuffer,
-					$this->strTemplate
-				);
-			}
-		}
+    /**
+     * @return void
+     */
+    private function overrideOutputFormatFrontend()
+    {
+        if (TL_MODE == 'FE') {
+            global $objPage;
 
-		return $strBuffer;
-	}
+            if ($objPage->outputFormat != '') {
+                $this->strFormat = $objPage->outputFormat;
+            }
+
+            $this->strTagEnding = ($this->strFormat == 'xhtml')
+                ? ' />'
+                : '>';
+        }
+    }
 }

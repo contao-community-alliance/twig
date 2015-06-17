@@ -6,7 +6,8 @@
  * @package ContaoTwig
  * @link    https://github.com/InfinitySoft/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
- * @author  Tristan Lins <tristan.lins@infinitysoft.de>
+ * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -35,12 +36,15 @@ class TwigCustomPagination
      * @param array $arrLinks
      * @param int   $intNumberOfLinks
      */
-    public function __construct(array $arrLinks,
-                                $intNumberOfLinks = 7)
-    {
-        parent::__construct(count($arrLinks),
-                            1,
-                            $intNumberOfLinks);
+    public function __construct(
+        array $arrLinks,
+        $intNumberOfLinks = 7
+    ) {
+        parent::__construct(
+            count($arrLinks),
+            1,
+            $intNumberOfLinks
+        );
 
         $this->arrLinks = array_values($arrLinks);
     }
@@ -51,6 +55,9 @@ class TwigCustomPagination
      * @param string
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function generate($strSeparator = '')
     {
@@ -91,30 +98,30 @@ class TwigCustomPagination
 
         $this->Template->first = array
         (
-            'page'  => 1,
-            'link'  => $this->lblFirst,
-            'href'  => $this->arrLinks[0],
+            'page' => 1,
+            'link' => $this->lblFirst,
+            'href' => $this->arrLinks[0],
         );
 
         $this->Template->previous = array
         (
-            'page'  => $this->intPage - 1,
-            'link'  => $this->lblPrevious,
-            'href'  => $this->arrLinks[$this->intPage - 2],
+            'page' => $this->intPage - 1,
+            'link' => $this->lblPrevious,
+            'href' => $this->arrLinks[$this->intPage - 2],
         );
 
         $this->Template->next = array
         (
-            'page'  => $this->intPage + 1,
-            'link'  => $this->lblNext,
-            'href'  => $this->arrLinks[$this->intPage],
+            'page' => $this->intPage + 1,
+            'link' => $this->lblNext,
+            'href' => $this->arrLinks[$this->intPage],
         );
 
         $this->Template->last = array
         (
-            'page'  => $this->intTotalPages,
-            'link'  => $this->lblLast,
-            'href'  => $this->arrLinks[count($this->arrLinks) - 1],
+            'page' => $this->intTotalPages,
+            'link' => $this->lblLast,
+            'href' => $this->arrLinks[count($this->arrLinks) - 1],
         );
 
         global $objPage;
@@ -124,15 +131,18 @@ class TwigCustomPagination
 
         // Add rel="prev" and rel="next" links (see #3515)
         if ($this->hasPrevious()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage($this->intPage - 1) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage(
+                    $this->intPage - 1
+                ) . '"' . $strTagClose;
         }
         if ($this->hasNext()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage($this->intPage + 1) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage(
+                    $this->intPage + 1
+                ) . '"' . $strTagClose;
         }
 
         return $this->Template->parse();
     }
-
 
     /**
      * Generate all page links separated with the given argument and return them as array

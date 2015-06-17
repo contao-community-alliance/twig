@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -19,130 +20,138 @@
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
 class PurgeTwigCache
-	extends Backend
-	implements executable
+    extends Backend
+    implements executable
 {
-	/**
-	 * Singleton instance.
-	 *
-	 * @var PurgeTwigCache
-	 */
-	protected static $objInstance = null;
+    /**
+     * Singleton instance.
+     *
+     * @var PurgeTwigCache
+     */
+    protected static $objInstance = null;
 
-	/**
-	 * Get singleton instance.
-	 *
-	 * @return PurgeTwigCache
-	 */
-	public static function getInstance()
-	{
-		if (self::$objInstance === null) {
-			self::$objInstance = new PurgeTwigCache();
-		}
-		return self::$objInstance;
-	}
+    /**
+     * Get singleton instance.
+     *
+     * @return PurgeTwigCache
+     */
+    public static function getInstance()
+    {
+        if (self::$objInstance === null) {
+            self::$objInstance = new PurgeTwigCache();
+        }
 
-	protected function __construct()
-	{
-		parent::__construct();
+        return self::$objInstance;
+    }
 
-		$this->import('Files');
-	}
+    protected function __construct()
+    {
+        parent::__construct();
 
-	/**
-	 * Return true if the module is active
-	 *
-	 * @return boolean
-	 */
-	public function isActive()
-	{
-		return (bool) ($this->Input->post('FORM_SUBMIT') == 'tl_purge_twig_cache');
-	}
+        $this->import('Files');
+    }
 
-	/**
-	 * Generate the module
-	 *
-	 * @return string
-	 */
-	public function run()
-	{
-		$objTemplate           = new TwigBackendTemplate('be_purge_images');
-		$objTemplate->isActive = $this->isActive();
+    /**
+     * Return true if the module is active
+     *
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return (bool)($this->Input->post('FORM_SUBMIT') == 'tl_purge_twig_cache');
+    }
 
-		// Confirmation message
-		if ($_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] != '') {
-			$objTemplate->cacheMessage            = $_SESSION['CLEAR_TWIG_CACHE_CONFIRM'];
-			$_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] = '';
-		}
+    /**
+     * Generate the module
+     *
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function run()
+    {
+        $objTemplate           = new TwigBackendTemplate('be_purge_images');
+        $objTemplate->isActive = $this->isActive();
 
-		// Purge the resources
-		if ($this->isActive()) {
-			$this->import('Files');
+        // Confirmation message
+        if ($_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] != '') {
+            $objTemplate->cacheMessage            = $_SESSION['CLEAR_TWIG_CACHE_CONFIRM'];
+            $_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] = '';
+        }
 
-			$intCount = $this->purge();
+        // Purge the resources
+        if ($this->isActive()) {
+            $this->import('Files');
 
-			$_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] = sprintf(
-				$GLOBALS['TL_LANG']['tl_maintenance']['purgedTwigCache'],
-				$intCount
-			);
+            $intCount = $this->purge();
 
-			$this->reload();
-		}
+            $_SESSION['CLEAR_TWIG_CACHE_CONFIRM'] = sprintf(
+                $GLOBALS['TL_LANG']['tl_maintenance']['purgedTwigCache'],
+                $intCount
+            );
 
-		// count existing files
-		$count    = 0;
-		$size     = 0;
-		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(TL_ROOT . '/system/cache/twig'),
-			RecursiveIteratorIterator::CHILD_FIRST);
-		/** @var SplFileInfo $path */
-		foreach ($iterator as $path) {
-			if ($path->isFile() && $path->getFilename() != '.keep') {
-				$count++;
-				$size += $path->getSize();
-			}
-		}
+            $this->reload();
+        }
 
-		$objTemplate->count  = sprintf(
-			$GLOBALS['TL_LANG']['tl_maintenance']['twigCacheCount'],
-			$count,
-			$this->getReadableSize($size)
-		);
-		$objTemplate->action = ampersand(\Environment::getInstance()->request);
+        // count existing files
+        $count    = 0;
+        $size     = 0;
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(TL_ROOT . '/system/cache/twig'),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+        /** @var SplFileInfo $path */
+        foreach ($iterator as $path) {
+            if ($path->isFile() && $path->getFilename() != '.keep') {
+                $count++;
+                $size += $path->getSize();
+            }
+        }
 
-		return $objTemplate->parse();
-	}
+        $objTemplate->count  = sprintf(
+            $GLOBALS['TL_LANG']['tl_maintenance']['twigCacheCount'],
+            $count,
+            $this->getReadableSize($size)
+        );
+        $objTemplate->action = ampersand(\Environment::getInstance()->request);
 
-	/**
-	 * Purge the twig cache directory
-	 */
-	public function purge()
-	{
-		$intCount = 0;
+        return $objTemplate->parse();
+    }
 
-		// remove files recursive
-		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(TL_ROOT . '/system/cache/twig'),
-			RecursiveIteratorIterator::CHILD_FIRST);
+    /**
+     * Purge the twig cache directory
+     */
+    public function purge()
+    {
+        $intCount = 0;
 
-		/** @var SplFileInfo $path */
-		foreach ($iterator as $path) {
-			if ($path->isFile() && $path->getFilename() != '.keep') {
-				$this->Files->delete(
-					substr(
-						$path->getRealPath(),
-						strlen(TL_ROOT) + 1
-					)
-				);
-				$intCount++;
-			}
-		}
+        // remove files recursive
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(TL_ROOT . '/system/cache/twig'),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
 
-		// Add log entry
-		$this->log(
-			'Purged twig cache directory',
-			'PurgeTwigCache purge',
-			TL_CRON
-		);
+        /** @var SplFileInfo $path */
+        foreach ($iterator as $path) {
+            if ($path->isFile() && $path->getFilename() != '.keep') {
+                $this->Files->delete(
+                    substr(
+                        $path->getRealPath(),
+                        strlen(TL_ROOT) + 1
+                    )
+                );
+                $intCount++;
+            }
+        }
 
-		return $intCount;
-	}
+        // Add log entry
+        $this->log(
+            'Purged twig cache directory',
+            'PurgeTwigCache purge',
+            TL_CRON
+        );
+
+        return $intCount;
+    }
 }

@@ -10,15 +10,13 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
 /**
  * Jobs
  */
 $GLOBALS['TL_LANG']['tl_maintenance_jobs']['twig'] = array(
-	'Clean Twig cache',
-	'Clean the Twig cache. The Twig cache can be disabled with the (Twig) debug mode in the backend settings.'
+    'Clean Twig cache',
+    'Clean the Twig cache. The Twig cache can be disabled with the (Twig) debug mode in the backend settings.'
 );
-
 
 /**
  * Fields

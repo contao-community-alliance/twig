@@ -12,75 +12,73 @@
 
 // Contao 3
 if (version_compare(
-	VERSION,
-	'3',
-	'>='
+    VERSION,
+    '3',
+    '>='
 )
 ) {
-	/**
-	 * Purge jobs
-	 */
-	$GLOBALS['TL_PURGE']['folders']['twig'] = array
-	(
-		'callback' => array('PurgeTwigCache', 'purge'),
-		'affected' => array('system/cache/twig')
-	);
+    /**
+     * Purge jobs
+     */
+    $GLOBALS['TL_PURGE']['folders']['twig'] = array
+    (
+        'callback' => array(
+            'PurgeTwigCache',
+            'purge'
+        ),
+        'affected' => array('system/cache/twig')
+    );
 
-	if (Input::get('do') == 'maintenance') {
-		/**
-		 * Scan the twig directory structure and add affected paths to TL_PURGE.
-		 *
-		 * @param $strDirectory
-		 */
-		function scanTwigCacheDirectories($strDirectory)
-		{
-			$blnHasFiles = false;
-			$arrFiles    = scan(TL_ROOT . '/' . $strDirectory);
+    if (Input::get('do') == 'maintenance') {
+        /**
+         * Scan the twig directory structure and add affected paths to TL_PURGE.
+         *
+         * @param $strDirectory
+         */
+        function scanTwigCacheDirectories($strDirectory)
+        {
+            $blnHasFiles = false;
+            $arrFiles    = scan(TL_ROOT . '/' . $strDirectory);
 
-			// Walk over the children
-			foreach ($arrFiles as $strPath) {
-				$strPath = $strDirectory . '/' . $strPath;
+            // Walk over the children
+            foreach ($arrFiles as $strPath) {
+                $strPath = $strDirectory . '/' . $strPath;
 
-				// Add directory and scan it
-				if (is_dir(TL_ROOT . '/' . $strPath)) {
-					$GLOBALS['TL_PURGE']['folders']['twig']['affected'][] = $strPath;
-					scanTwigCacheDirectories($strPath);
-				}
+                // Add directory and scan it
+                if (is_dir(TL_ROOT . '/' . $strPath)) {
+                    $GLOBALS['TL_PURGE']['folders']['twig']['affected'][] = $strPath;
+                    scanTwigCacheDirectories($strPath);
+                } // Remember that directory contains files
+                else {
+                    $blnHasFiles = true;
+                }
+            }
 
-				// Remember that directory contains files
-				else {
-					$blnHasFiles = true;
-				}
-			}
+            // Remove directories that only contains structure
+            if (!$blnHasFiles) {
+                $intPos = array_search($strDirectory, $GLOBALS['TL_PURGE']['folders']['twig']['affected']);
+                unset($GLOBALS['TL_PURGE']['folders']['twig']['affected'][$intPos]);
+            }
+        }
 
-			// Remove directories that only contains structure
-			if (!$blnHasFiles) {
-				$intPos = array_search($strDirectory, $GLOBALS['TL_PURGE']['folders']['twig']['affected']);
-				unset($GLOBALS['TL_PURGE']['folders']['twig']['affected'][$intPos]);
-			}
-		}
-
-		scanTwigCacheDirectories('system/cache/twig');
-	}
-}
-
-// Contao 2
+        scanTwigCacheDirectories('system/cache/twig');
+    }
+} // Contao 2
 else {
-	/**
-	 * Maintenance
-	 */
-	$GLOBALS['TL_MAINTENANCE'][] = 'PurgeTwigCache';
+    /**
+     * Maintenance
+     */
+    $GLOBALS['TL_MAINTENANCE'][] = 'PurgeTwigCache';
 }
 
 if (!file_exists(TL_ROOT . '/system/cache/twig')) {
-	mkdir(TL_ROOT . '/system/cache/twig', 0777, true);
+    mkdir(TL_ROOT . '/system/cache/twig', 0777, true);
 }
 
 /**
  * Content elements
  */
 $GLOBALS['TL_CTE']['texts']['twig'] = 'ContentTwig';
-
 
 /**
  * Front end modules
