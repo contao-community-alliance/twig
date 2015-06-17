@@ -6,7 +6,8 @@
  * @package ContaoTwig
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
- * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Oliver Hoff <oliver@hofff.com>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -19,22 +20,22 @@
 class ContaoTwigRefererAccessObject extends System
 {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	public function __toString()
-	{
-		return $this->current();
-	}
+    public function __toString()
+    {
+        return $this->current();
+    }
 
-	public function current()
-	{
-		if (version_compare(VERSION, '3', '>=')) {
-			return System::getReferer();
-		} else {
-			return $this->getReferer();
-		}
-	}
+    public function current()
+    {
+        if (version_compare(VERSION, '3', '>=')) {
+            return System::getReferer();
+        } else {
+            return $this->getReferer();
+        }
+    }
 }

@@ -10,19 +10,17 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
 /**
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_settings']['twigDebugMode']      = array(
-	'Activate debug mode',
-	'Activate the debug mode of the template engine (this can also be done with the contao debug mode). In debug mode the <code>dump</code> function is availeable and all templates are live rendered.<br><strong>Warning: The render process will be extremely slow in this mode!</strong>'
+    'Activate debug mode',
+    'Activate the debug mode of the template engine (this can also be done with the contao debug mode). In debug mode the <code>dump</code> function is availeable and all templates are live rendered.<br><strong>Warning: The render process will be extremely slow in this mode!</strong>'
 );
 $GLOBALS['TL_LANG']['tl_settings']['twigDebugExtension'] = array(
-	'Activate debug extension',
-	'Activate the <code>dump</code> function even if debug mode is disabled.'
+    'Activate debug extension',
+    'Activate the <code>dump</code> function even if debug mode is disabled.'
 );
-
 
 /**
  * Legends

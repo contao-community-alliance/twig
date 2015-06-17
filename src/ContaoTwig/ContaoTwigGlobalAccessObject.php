@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -20,46 +21,52 @@
  */
 class ContaoTwigGlobalAccessObject
 {
-	/**
-	 * The global variable name.
-	 *
-	 * @var string
-	 */
-	protected $var;
+    /**
+     * The global variable name.
+     *
+     * @var string
+     */
+    protected $var;
 
-	/**
-	 * @param string $var
-	 */
-	public function __construct($var)
-	{
-		$this->var = $var;
-	}
+    /**
+     * @param string $var
+     */
+    public function __construct($var)
+    {
+        $this->var = $var;
+    }
 
-	/**
-	 * @param string $k
-	 *
-	 * @return mixed
-	 */
-	public function __get($k)
-	{
-		return $GLOBALS[$this->var][$k];
-	}
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function __get($key)
+    {
+        return $GLOBALS[$this->var][$key];
+    }
 
-	/**
-	 * @param string $k
-	 *
-	 * @return bool
-	 */
-	public function __isset($k)
-	{
-		return isset($GLOBALS[$this->var][$k]);
-	}
+    /**
+     * @param string $key
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function __isset($key)
+    {
+        return isset($GLOBALS[$this->var][$key]);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return "\$GLOBALS['{$this->var}']";
-	}
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return "\$GLOBALS['{$this->var}']";
+    }
 }

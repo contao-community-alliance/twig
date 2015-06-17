@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -20,146 +21,162 @@
  */
 class TwigTemplate
 {
-	/**
-	 * @var string
-	 */
-	protected $templateName;
+    /**
+     * @var string
+     */
+    protected $templateName;
 
-	/**
-	 * @var string
-	 */
-	protected $format;
+    /**
+     * @var string
+     */
+    protected $format;
 
-	/**
-	 * @var string
-	 */
-	protected $fileExtension;
+    /**
+     * @var string
+     */
+    protected $fileExtension;
 
-	/**
-	 * @param string $templateName
-	 * @param string $format
-	 * @param string $contentType
-	 */
-	public function __construct($templateName = null, $format = null, $fileExtension = 'twig')
-	{
-		$this->templateName  = $templateName;
-		$this->format        = $format;
-		$this->fileExtension = $fileExtension;
-	}
+    /**
+     * @param string $templateName
+     * @param string $format
+     * @param string $fileExtension
+     */
+    public function __construct($templateName = null, $format = null, $fileExtension = 'twig')
+    {
+        $this->templateName  = $templateName;
+        $this->format        = $format;
+        $this->fileExtension = $fileExtension;
+    }
 
-	/**
-	 * @param string $template
-	 */
-	public function setTemplateName($template)
-	{
-		$this->templateName = $template;
-		return $this;
-	}
+    /**
+     * @param string $template
+     *
+     * @return TwigTemplate
+     */
+    public function setTemplateName($template)
+    {
+        $this->templateName = $template;
 
-	/**
-	 * @return string
-	 */
-	public function getTemplateName()
-	{
-		return $this->templateName;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $format
-	 */
-	public function setFormat($format)
-	{
-		$this->format = $format;
-		return $this;
-	}
+    /**
+     * @return string
+     */
+    public function getTemplateName()
+    {
+        return $this->templateName;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getFormat()
-	{
-		return $this->format;
-	}
+    /**
+     * @param string $format
+     *
+     * @return TwigTemplate
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
 
-	/**
-	 * @param string $fileExtension
-	 */
-	public function setFileExtension($fileExtension)
-	{
-		$this->fileExtension = $fileExtension;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getFileExtension()
-	{
-		return $this->fileExtension;
-	}
+    /**
+     * @return string
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
 
-	/**
-	 * Get the effective template file.
-	 *
-	 * @return string
-	 * @throws RuntimeException
-	 */
-	public function getTemplateFile()
-	{
-		if (!$this->templateName) {
-			throw new RuntimeException('No template defined');
-		}
+    /**
+     * @param string $fileExtension
+     *
+     * @return TwigTemplate
+     */
+    public function setFileExtension($fileExtension)
+    {
+        $this->fileExtension = $fileExtension;
 
-		if (TL_MODE == 'FE' &&
-			$this->format === null &&
-			$GLOBALS['objPage'] &&
-			$GLOBALS['objPage']->outputFormat != ''
-		) {
-			$format = $GLOBALS['objPage']->outputFormat;
-		}
-		else if ($this->format !== null) {
-			$format = $this->format;
-		}
+        return $this;
+    }
 
-		return $this->templateName . ($format ? '.' . $format : '') . '.' . $this->fileExtension;
-	}
+    /**
+     * @return string
+     */
+    public function getFileExtension()
+    {
+        return $this->fileExtension;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function parse(array $context = array())
-	{
-		$file = $this->getTemplateFile();
+    /**
+     * Get the effective template file.
+     *
+     * @return string
+     * @throws RuntimeException
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function getTemplateFile()
+    {
+        if (!$this->templateName) {
+            throw new RuntimeException('No template defined');
+        }
 
-		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['prepareTwigTemplate']) &&
-			is_array($GLOBALS['TL_HOOKS']['prepareTwigTemplate'])
-		) {
-			foreach ($GLOBALS['TL_HOOKS']['prepareTwigTemplate'] as $callback) {
-				$object = \System::importStatic($callback[0]);
-				$object->$callback[1]($this);
-			}
-		}
+        if (TL_MODE == 'FE' &&
+            $this->format === null &&
+            $GLOBALS['objPage'] &&
+            $GLOBALS['objPage']->outputFormat != ''
+        ) {
+            $format = $GLOBALS['objPage']->outputFormat;
+        } else {
+            if ($this->format !== null) {
+                $format = $this->format;
+            }
+        }
 
-		$contaoTwig  = ContaoTwig::getInstance();
-		$environment = $contaoTwig->getEnvironment();
-		$buffer      = $environment->render($file, $context);
+        return $this->templateName . ($format ? '.' . $format : '') . '.' . $this->fileExtension;
+    }
 
-		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['parseTwigTemplate']) &&
-			is_array($GLOBALS['TL_HOOKS']['parseTwigTemplate'])
-		) {
-			foreach ($GLOBALS['TL_HOOKS']['parseTwigTemplate'] as $callback) {
-				$object = \System::importStatic($callback[0]);
-				$buffer = $object->$callback[1](
-					$buffer,
-					$context,
-					$this
-				);
-			}
-		}
+    /**
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    public function parse(array $context = array())
+    {
+        $file = $this->getTemplateFile();
 
-		return $buffer;
-	}
+        // HOOK: add custom parse filters
+        if (isset($GLOBALS['TL_HOOKS']['prepareTwigTemplate']) &&
+            is_array($GLOBALS['TL_HOOKS']['prepareTwigTemplate'])
+        ) {
+            foreach ($GLOBALS['TL_HOOKS']['prepareTwigTemplate'] as $callback) {
+                $object = \System::importStatic($callback[0]);
+                $object->$callback[1]($this);
+            }
+        }
+
+        $contaoTwig  = ContaoTwig::getInstance();
+        $environment = $contaoTwig->getEnvironment();
+        $buffer      = $environment->render($file, $context);
+
+        // HOOK: add custom parse filters
+        if (isset($GLOBALS['TL_HOOKS']['parseTwigTemplate']) &&
+            is_array($GLOBALS['TL_HOOKS']['parseTwigTemplate'])
+        ) {
+            foreach ($GLOBALS['TL_HOOKS']['parseTwigTemplate'] as $callback) {
+                $object = \System::importStatic($callback[0]);
+                $buffer = $object->$callback[1](
+                    $buffer,
+                    $context,
+                    $this
+                );
+            }
+        }
+
+        return $buffer;
+    }
 
 }

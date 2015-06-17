@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -19,23 +20,23 @@
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
 abstract class TwigBackendModule
-	extends BackendModule
+    extends BackendModule
 {
-	/**
-	 * @var TwigBackendTemplate
-	 */
-	protected $Template;
+    /**
+     * @var TwigBackendTemplate
+     */
+    protected $Template;
 
-	/**
-	 * Parse the template
-	 *
-	 * @return string
-	 */
-	public function generate()
-	{
-		$this->Template = new TwigBackendTemplate($this->strTemplate);
-		$this->compile();
+    /**
+     * Parse the template
+     *
+     * @return string
+     */
+    public function generate()
+    {
+        $this->Template = new TwigBackendTemplate($this->strTemplate);
+        $this->compile();
 
-		return $this->Template->parse();
-	}
+        return $this->Template->parse();
+    }
 }

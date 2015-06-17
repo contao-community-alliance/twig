@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -20,111 +21,112 @@
  */
 class TwigHelper
 {
-	/**
-	 * Singleton instance.
-	 *
-	 * @var TwigHelper
-	 */
-	protected static $objInstance = null;
+    /**
+     * Singleton instance.
+     *
+     * @var TwigHelper
+     */
+    protected static $objInstance = null;
 
-	/**
-	 * Get the singleton instance.
-	 *
-	 * @static
-	 * @return TwigHelper
-	 */
-	public static function getInstance()
-	{
-		if (self::$objInstance === null) {
-			self::$objInstance = new TwigHelper();
-		}
-		return self::$objInstance;
-	}
+    /**
+     * Get the singleton instance.
+     *
+     * @static
+     * @return TwigHelper
+     */
+    public static function getInstance()
+    {
+        if (self::$objInstance === null) {
+            self::$objInstance = new TwigHelper();
+        }
 
-	/**
-	 * Return all template files of a particular group as array
-	 *
-	 * @param string
-	 * @param integer
-	 *
-	 * @return array
-	 * @throws Exception
-	 */
-	public static function getTemplateGroup($prefix, $themeId = 0)
-	{
-		$folders = array();
+        return self::$objInstance;
+    }
 
-		// Add the templates root directory
-		$folders['/templates'] = TL_ROOT . '/templates';
+    /**
+     * Return all template files of a particular group as array
+     *
+     * @param string
+     * @param integer
+     *
+     * @return array
+     * @throws Exception
+     */
+    public static function getTemplateGroup($prefix, $themeId = 0)
+    {
+        $folders = array();
 
-		// Add the theme templates folder
-		if ($themeId > 0) {
-			$resultSet = Database::getInstance()
-				->prepare("SELECT templates FROM tl_theme WHERE id=?")
-				->limit(1)
-				->execute($themeId);
+        // Add the templates root directory
+        $folders['/templates'] = TL_ROOT . '/templates';
 
-			if ($resultSet->numRows > 0 && $resultSet->templates != '') {
-				$folders[$resultSet->title] = TL_ROOT . '/' . $resultSet->templates;
-			}
-		}
+        // Add the theme templates folder
+        if ($themeId > 0) {
+            $resultSet = Database::getInstance()
+                ->prepare("SELECT templates FROM tl_theme WHERE id=?")
+                ->limit(1)
+                ->execute($themeId);
 
-		// Add the module templates folders if they exist
-		$activeModules = Config::getInstance()->getActiveModules();
-		foreach ($activeModules as $module) {
-			$folder = TL_ROOT . '/system/modules/' . $module . '/templates';
+            if ($resultSet->numRows > 0 && $resultSet->templates != '') {
+                $folders[$resultSet->title] = TL_ROOT . '/' . $resultSet->templates;
+            }
+        }
 
-			if (is_dir($folder)) {
-				$folders['system/modules/' . $module] = $folder;
-			}
-		}
+        // Add the module templates folders if they exist
+        $activeModules = Config::getInstance()->getActiveModules();
+        foreach ($activeModules as $module) {
+            $folder = TL_ROOT . '/system/modules/' . $module . '/templates';
 
-		return static::getTemplateGroupInFolders($prefix, $folders);
-	}
+            if (is_dir($folder)) {
+                $folders['system/modules/' . $module] = $folder;
+            }
+        }
 
-	/**
-	 * Return all template files of a particular group as array
-	 *
-	 * @param string
-	 * @param integer
-	 *
-	 * @return array
-	 * @throws Exception
-	 */
-	public static function getTemplateGroupInFolders($prefix, $folders)
-	{
-		$templates = array();
+        return static::getTemplateGroupInFolders($prefix, $folders);
+    }
 
-		// Find all matching templates
-		foreach ($folders as $sourceName => $folder) {
-			$iterator = new RecursiveDirectoryIterator(
-				$folder,
-				RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::UNIX_PATHS
-			);
-			$iterator = new RecursiveIteratorIterator(
-				$iterator,
-				RecursiveIteratorIterator::LEAVES_ONLY
-			);
-			$iterator = new RegexIterator(
-				$iterator,
-				'~(^|/)' . preg_quote($prefix, '~') . '.*\.twig$~i'
-			);
-			/** @var RecursiveDirectoryIterator|RecursiveIteratorIterator|RegexIterator $iterator */
-			$iterator->next();
+    /**
+     * Return all template files of a particular group as array
+     *
+     * @param string
+     * @param integer
+     *
+     * @return array
+     * @throws Exception
+     */
+    public static function getTemplateGroupInFolders($prefix, $folders)
+    {
+        $templates = array();
 
-			while ($iterator->accept()) {
-				$templateName = $iterator->getSubPathname();
-				$templateName = preg_replace('#\.[^\.]+\.twig$#', '', $templateName);
+        // Find all matching templates
+        foreach ($folders as $sourceName => $folder) {
+            $iterator = new RecursiveDirectoryIterator(
+                $folder,
+                RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::UNIX_PATHS
+            );
+            $iterator = new RecursiveIteratorIterator(
+                $iterator,
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            $iterator = new RegexIterator(
+                $iterator,
+                '~(^|/)' . preg_quote($prefix, '~') . '.*\.twig$~i'
+            );
+            /** @var RecursiveDirectoryIterator|RecursiveIteratorIterator|RegexIterator $iterator */
+            $iterator->next();
 
-				$templates[$sourceName][$templateName] = $templateName;
-				uksort($templates[$sourceName], 'strnatcasecmp');
+            while ($iterator->accept()) {
+                $templateName = $iterator->getSubPathname();
+                $templateName = preg_replace('#\.[^\.]+\.twig$#', '', $templateName);
 
-				$iterator->next();
-			}
-		}
+                $templates[$sourceName][$templateName] = $templateName;
+                uksort($templates[$sourceName], 'strnatcasecmp');
 
-		uksort($templates, 'strnatcasecmp');
+                $iterator->next();
+            }
+        }
 
-		return $templates;
-	}
+        uksort($templates, 'strnatcasecmp');
+
+        return $templates;
+    }
 }

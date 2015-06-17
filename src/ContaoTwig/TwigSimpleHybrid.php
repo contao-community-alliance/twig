@@ -7,6 +7,7 @@
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -20,33 +21,33 @@
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
 abstract class TwigSimpleHybrid
-	extends TwigHybrid
+    extends TwigHybrid
 {
-	/**
-	 * @param Database_Result|\Model\Collection $objElement
-	 */
-	public function __construct($objElement)
-	{
-		parent::__construct($objElement);
+    /**
+     * @param Database_Result|\Model\Collection $objElement
+     */
+    public function __construct($objElement)
+    {
+        parent::__construct($objElement);
 
-		$this->arrData = $objElement->row();
+        $this->arrData = $objElement->row();
 
-		// Get space and CSS ID from the parent element (!)
-		$this->space = deserialize($objElement->space);
-		$this->cssID = deserialize(
-			$objElement->cssID,
-			true
-		);
+        // Get space and CSS ID from the parent element (!)
+        $this->space = deserialize($objElement->space);
+        $this->cssID = deserialize(
+            $objElement->cssID,
+            true
+        );
 
-		$this->typePrefix = 'mod_';
-		$this->strKey     = $objElement->type;
+        $this->typePrefix = 'mod_';
+        $this->strKey     = $objElement->type;
 
-		$arrHeadline    = deserialize($objElement->headline);
-		$this->headline = is_array($arrHeadline)
-			? $arrHeadline['value']
-			: $arrHeadline;
-		$this->hl       = is_array($arrHeadline)
-			? $arrHeadline['unit']
-			: 'h1';
-	}
+        $arrHeadline    = deserialize($objElement->headline);
+        $this->headline = is_array($arrHeadline)
+            ? $arrHeadline['value']
+            : $arrHeadline;
+        $this->hl       = is_array($arrHeadline)
+            ? $arrHeadline['unit']
+            : 'h1';
+    }
 }
