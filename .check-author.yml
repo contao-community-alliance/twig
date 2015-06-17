@@ -1,0 +1,7 @@
+exclude:
+  contao
+
+mapping:
+  "Tristan Lins <tristan@lins.io>":
+    - Tristan Lins <tristan.lins@infinitysoft.de>
+    - Tristan Lins <tristan.lins@bit3.de>
