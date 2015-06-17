@@ -36,7 +36,8 @@
     "phpcq/all-tasks": "~1.0"
   },
   "replace": {
-    "contao-legacy/twig": "self.version"
+    "contao-legacy/twig": "self.version",
+    "bit3/contao-twig": "self.version"
   },
   "autoload": {
     "classmap": ["src/"]
