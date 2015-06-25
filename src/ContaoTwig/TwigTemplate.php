@@ -8,6 +8,7 @@
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author  Sven Baumann <baumann.sv@gmail.com>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -123,6 +124,7 @@ class TwigTemplate
             throw new RuntimeException('No template defined');
         }
 
+        $format = null;
         if (TL_MODE == 'FE' &&
             $this->format === null &&
             $GLOBALS['objPage'] &&
@@ -139,6 +141,8 @@ class TwigTemplate
     }
 
     /**
+     * @param array $context
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)

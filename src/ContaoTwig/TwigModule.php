@@ -31,6 +31,8 @@ abstract class TwigModule
      * Parse the template
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function generate()
     {

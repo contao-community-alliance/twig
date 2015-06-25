@@ -31,6 +31,8 @@ abstract class TwigContentElement
      * Parse the template
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function generate()
     {

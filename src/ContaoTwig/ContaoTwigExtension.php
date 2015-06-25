@@ -11,6 +11,8 @@
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
+use Database\Result;
+use Database\Statement;
 
 /**
  * Class ContaoTwig
@@ -231,6 +233,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return mixed|string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function _dateFilter(\Twig_Environment $env, $date, $format = null, $timezone = null)
     {
@@ -332,6 +336,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function _parseDatimFilter($timestamp)
     {
@@ -353,7 +359,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      *
      * @param string $sql
      *
-     * @return Database_Statement
+     * @return Statement
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -368,15 +374,15 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      *
      * @static
      *
-     * @param Database_Statement $statement
-     * @param array              $arguments
+     * @param Statement $statement
+     * @param array     $arguments
      *
-     * @return Database_Statement
+     * @return Statement
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function _setFilter(
-        Database_Statement $statement,
+        Statement $statement,
         array $arguments
     ) {
         return $statement->set($arguments);
@@ -387,10 +393,10 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      *
      * @static
      *
-     * @param string|Database_Statement $statement
+     * @param string|Statement $statement
      * @param array                     $arguments
      *
-     * @return Database_Result
+     * @return Result
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -398,8 +404,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
         $statement,
         array $arguments = array()
     ) {
-        if ($statement instanceof Database_Statement) {
-            /** @var Database_Statement $statement */
+        if ($statement instanceof Statement) {
+            /** @var Statement $statement */
             return $statement
                 ->execute($arguments)
                 ->fetchAllAssoc();
@@ -417,7 +423,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      *
      * @param string $statement
      *
-     * @return Database_Result
+     * @return Result
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -434,6 +440,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function _addImage()
     {
@@ -454,6 +462,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
                 $src        = $arguments;
                 $width      = '';
                 $height     = '';
+                $mode       = '';
                 $alt        = '';
                 $attributes = '';
                 $fallback   = false;
@@ -562,7 +571,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      */
     public function _generateUrl($page, $params = null, $language = null)
     {
-        if ($page instanceof Database_Result || $page instanceof \Database\Result) {
+        if ($page instanceof Result) {
             $page = $page->row();
         } else {
             if ($page instanceof \Model\Collection) {
@@ -601,6 +610,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function _stringify(\Twig_Environment $env, $value)
     {
