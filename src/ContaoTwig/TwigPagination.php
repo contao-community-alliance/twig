@@ -29,8 +29,7 @@ class TwigPagination
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function generate($strSeparator = '')
     {
@@ -38,27 +37,7 @@ class TwigPagination
             return '';
         }
 
-        $this->strUrl = preg_replace(
-            array(
-                '#\?page=\d+&#i',
-                '#\?page=\d+$#i',
-                '#&(amp;)?page=\d+#i'
-            ),
-            array(
-                '?',
-                '',
-                ''
-            ),
-            \Environment::getInstance()->request
-        );
-
-        $this->strVarConnector = strpos(
-            $this->strUrl,
-            '?'
-        ) !== false
-            ? '&amp;'
-            : '?';
-        $this->intTotalPages   = ceil($this->intRows / $this->intRowsPerPage);
+        $this->determineValues();
 
         // Return if there is only one page
         if ($this->intTotalPages < 2 || $this->intRows < 1) {
@@ -69,63 +48,11 @@ class TwigPagination
             $this->intPage = $this->intTotalPages;
         }
 
-        $this->Template = new TwigFrontendTemplate('pagination');
+        $template = $this->prepareTemplate();
 
-        $this->Template->hasFirst    = $this->hasFirst();
-        $this->Template->hasPrevious = $this->hasPrevious();
-        $this->Template->hasNext     = $this->hasNext();
-        $this->Template->hasLast     = $this->hasLast();
+        $this->setHeadTags();
 
-        $this->Template->items = $this->getItems();
-        $this->Template->page  = $this->intPage;
-        $this->Template->total = $this->intTotalPages;
-
-        $this->Template->first = array
-        (
-            'page' => 1,
-            'link' => $this->lblFirst,
-            'href' => $this->linkToPage(1),
-        );
-
-        $this->Template->previous = array
-        (
-            'page' => $this->intPage - 1,
-            'link' => $this->lblPrevious,
-            'href' => $this->linkToPage($this->intPage - 1),
-        );
-
-        $this->Template->next = array
-        (
-            'page' => $this->intPage + 1,
-            'link' => $this->lblNext,
-            'href' => $this->linkToPage($this->intPage + 1),
-        );
-
-        $this->Template->last = array
-        (
-            'page' => $this->intTotalPages,
-            'link' => $this->lblLast,
-            'href' => $this->linkToPage($this->intTotalPages),
-        );
-
-        global $objPage;
-        $strTagClose = ($objPage->outputFormat == 'xhtml')
-            ? ' />'
-            : '>';
-
-        // Add rel="prev" and rel="next" links (see #3515)
-        if ($this->hasPrevious()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage(
-                    $this->intPage - 1
-                ) . '"' . $strTagClose;
-        }
-        if ($this->hasNext()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage(
-                    $this->intPage + 1
-                ) . '"' . $strTagClose;
-        }
-
-        return $this->Template->parse();
+        return $template->parse();
     }
 
     /**
@@ -168,10 +95,129 @@ class TwigPagination
             $arrLinks[] = (object) array(
                 'page'    => $i,
                 'current' => $i == $this->intPage,
-                'href'    => $this->linkToPage($i)
+                'href'    => $this->getItemLink($i)
             );
         }
 
         return $arrLinks;
+    }
+
+    /**
+     * Retrieve the link to an item.
+     *
+     * @param int $item The item index.
+     *
+     * @return string
+     */
+    protected function getItemLink($item)
+    {
+        return $this->linkToPage($item);
+    }
+
+    /**
+     * Determine the basic values like the url and the total amount of pages.
+     *
+     * @return void
+     */
+    protected function determineValues()
+    {
+        $this->strUrl = preg_replace(
+            array(
+                '#\?page=\d+&#i',
+                '#\?page=\d+$#i',
+                '#&(amp;)?page=\d+#i'
+            ),
+            array(
+                '?',
+                '',
+                ''
+            ),
+            \Environment::get('request')
+        );
+
+        $this->strVarConnector = strpos(
+            $this->strUrl,
+            '?'
+        ) !== false
+            ? '&amp;'
+            : '?';
+        $this->intTotalPages   = ceil($this->intRows / $this->intRowsPerPage);
+    }
+
+    /**
+     * Build the template instance and return it.
+     *
+     * @return TwigFrontendTemplate
+     */
+    private function prepareTemplate()
+    {
+        $template = new TwigFrontendTemplate('pagination');
+
+        $template->hasFirst    = $this->hasFirst();
+        $template->hasPrevious = $this->hasPrevious();
+        $template->hasNext     = $this->hasNext();
+        $template->hasLast     = $this->hasLast();
+
+        $template->items = $this->getItems();
+        $template->page  = $this->intPage;
+        $template->total = $this->intTotalPages;
+
+        $template->first = array
+        (
+            'page' => 1,
+            'link' => $this->lblFirst,
+            'href' => $this->linkToPage(1),
+        );
+
+        $template->previous = array
+        (
+            'page' => $this->intPage - 1,
+            'link' => $this->lblPrevious,
+            'href' => $this->linkToPage($this->intPage - 1),
+        );
+
+        $template->next = array
+        (
+            'page' => $this->intPage + 1,
+            'link' => $this->lblNext,
+            'href' => $this->linkToPage($this->intPage + 1),
+        );
+
+        $template->last = array
+        (
+            'page' => $this->intTotalPages,
+            'link' => $this->lblLast,
+            'href' => $this->linkToPage($this->intTotalPages),
+        );
+
+        return $template;
+    }
+
+    /**
+     * Set the head tags (link rel next/prev).
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    protected function setHeadTags()
+    {
+        global $objPage;
+        $strTagClose = ($objPage->outputFormat == 'xhtml')
+            ? ' />'
+            : '>';
+
+        // Add rel="prev" and rel="next" links (see #3515)
+        if ($this->hasPrevious()) {
+            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage(
+                    $this->intPage - 1
+                ) . '"' . $strTagClose;
+        }
+        if ($this->hasNext()) {
+            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage(
+                    $this->intPage + 1
+                ) . '"' . $strTagClose;
+        }
     }
 }
