@@ -154,7 +154,7 @@ class TwigTemplate
         ) {
             foreach ($GLOBALS['TL_HOOKS']['prepareTwigTemplate'] as $callback) {
                 $object = \System::importStatic($callback[0]);
-                $object->$callback[1]($this);
+                $object->$callback[1]($this, $context);
             }
         }
 
