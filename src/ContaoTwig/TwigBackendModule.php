@@ -12,23 +12,27 @@
  */
 
 /**
- * Class TwigBackendModule
- *
  * A BackendModule implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-abstract class TwigBackendModule
-    extends BackendModule
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+abstract class TwigBackendModule extends BackendModule
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The template instance.
+     *
      * @var TwigBackendTemplate
+     *
+     * @codingStandardsIgnoreStart
      */
     protected $Template;
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Parse the template
+     * Parse the template.
      *
      * @return string
      */

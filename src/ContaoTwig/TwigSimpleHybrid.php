@@ -10,6 +10,8 @@
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
+use Database\Result;
+use Model\Collection;
 
 /**
  * Class TwigSimpleHybrid
@@ -20,11 +22,14 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-abstract class TwigSimpleHybrid
-    extends TwigHybrid
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+abstract class TwigSimpleHybrid extends TwigHybrid
+// @codingStandardsIgnoreEnd
 {
     /**
-     * @param Database_Result|\Model\Collection $objElement
+     * Create a new instance.
+     *
+     * @param Result|Collection $objElement The values from the database for the element.
      */
     public function __construct($objElement)
     {

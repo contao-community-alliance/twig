@@ -12,24 +12,35 @@
  */
 
 /**
- * Class ContaoTwigInitializeEvent
+ * Class ContaoTwigInitializeEvent.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigInitializeEvent extends \Symfony\Component\EventDispatcher\Event
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The twig instance.
+     *
      * @var ContaoTwig
      */
     protected $contaoTwig;
 
-    function __construct(ContaoTwig $contaoTwig)
+    /**
+     * Create a new instance.
+     *
+     * @param ContaoTwig $contaoTwig The twig instance to use.
+     */
+    public function __construct(ContaoTwig $contaoTwig)
     {
         $this->contaoTwig = $contaoTwig;
     }
 
     /**
+     * Return the twig instance.
+     *
      * @return \ContaoTwig
      */
     public function getContaoTwig()

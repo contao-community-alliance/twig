@@ -19,9 +19,9 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-class PurgeTwigCache
-    extends Backend
-    implements executable
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class PurgeTwigCache extends Backend implements executable
+// @codingStandardsIgnoreEnd
 {
     /**
      * Singleton instance.
@@ -44,6 +44,9 @@ class PurgeTwigCache
         return self::$objInstance;
     }
 
+    /**
+     * Create a new instance.
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -52,17 +55,17 @@ class PurgeTwigCache
     }
 
     /**
-     * Return true if the module is active
+     * Return true if the module is active.
      *
      * @return boolean
      */
     public function isActive()
     {
-        return (bool)($this->Input->post('FORM_SUBMIT') == 'tl_purge_twig_cache');
+        return (bool) ($this->Input->post('FORM_SUBMIT') == 'tl_purge_twig_cache');
     }
 
     /**
-     * Generate the module
+     * Generate the module.
      *
      * @return string
      *
@@ -114,13 +117,15 @@ class PurgeTwigCache
             $count,
             $this->getReadableSize($size)
         );
-        $objTemplate->action = ampersand(\Environment::getInstance()->request);
+        $objTemplate->action = ampersand(\Environment::get('request'));
 
         return $objTemplate->parse();
     }
 
     /**
-     * Purge the twig cache directory
+     * Purge the twig cache directory.
+     *
+     * @return int
      */
     public function purge()
     {
@@ -138,7 +143,7 @@ class PurgeTwigCache
                 $this->Files->delete(
                     substr(
                         $path->getRealPath(),
-                        strlen(TL_ROOT) + 1
+                        (strlen(TL_ROOT) + 1)
                     )
                 );
                 $intCount++;

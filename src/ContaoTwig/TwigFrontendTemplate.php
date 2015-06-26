@@ -19,20 +19,13 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-class TwigFrontendTemplate
-    extends FrontendTemplate
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class TwigFrontendTemplate extends FrontendTemplate
+// @codingStandardsIgnoreEnd
 {
-    public function __construct(
-        $strTemplate = '',
-        $strContentType = 'text/html'
-    ) {
-        parent::__construct(
-            $strTemplate,
-            $strContentType
-        );
-    }
-
     /**
+     * Parse the template.
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
@@ -63,9 +56,8 @@ class TwigFrontendTemplate
             );
 
         // HOOK: add custom parse filters
-        if (isset($GLOBALS['TL_HOOKS']['parseFrontendTemplate']) && is_array(
-                $GLOBALS['TL_HOOKS']['parseFrontendTemplate']
-            )
+        if (isset($GLOBALS['TL_HOOKS']['parseFrontendTemplate'])
+            && is_array($GLOBALS['TL_HOOKS']['parseFrontendTemplate'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback) {
                 $this->import($callback[0]);
@@ -80,17 +72,18 @@ class TwigFrontendTemplate
     }
 
     /**
+     * Override the output format in the front end.
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     private function overrideOutputFormatFrontend()
     {
-        // Override the output format in the front end
         if (TL_MODE == 'FE') {
-            global $objPage;
-
-            if ($objPage->outputFormat != '') {
-                $this->strFormat = $objPage->outputFormat;
+            if ($GLOBALS['objPage']->outputFormat != '') {
+                $this->strFormat = $GLOBALS['objPage']->outputFormat;
             }
 
             $this->strTagEnding = ($this->strFormat == 'xhtml')
@@ -98,5 +91,4 @@ class TwigFrontendTemplate
                 : '>';
         }
     }
-
 }

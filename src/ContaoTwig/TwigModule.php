@@ -12,25 +12,30 @@
  */
 
 /**
- * Class TwigModule
- *
  * A Module implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-abstract class TwigModule
-    extends Module
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+abstract class TwigModule extends Module
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The template instance.
+     *
      * @var TwigFrontendTemplate
      */
+    // @codingStandardsIgnoreStart
     protected $Template;
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Parse the template
+     * Parse the template.
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function generate()
     {

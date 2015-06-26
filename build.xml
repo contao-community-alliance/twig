@@ -8,4 +8,18 @@
 -->
 <project name="contao-community-alliance-twig" default="build">
     <import file="vendor/phpcq/phpcq/phpcq.main.xml" />
+  <!-- Have to disable phpcpd for the moment, as we do not have namespaces yet. -->
+  <target
+          name="analyze"
+          depends="
+            phploc,
+            pdepend,
+            phpmd,
+            phpcs,
+            phpunit,
+            phpspec,
+            branch-alias-validation,
+            travis-configuration-check"
+          description="Do static analysis of the code"
+          />
 </project>

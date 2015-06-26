@@ -12,24 +12,26 @@
  */
 
 /**
- * Class ContentTwig
- *
  * Content element using a twig template as content.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContentTwig extends TwigContentElement
+// @codingStandardsIgnoreEnd
 {
     /**
-     * Template
+     * The template name.
      *
      * @var string
      */
     protected $strTemplate = 'ce_twig';
 
     /**
-     * Compile the content element
+     * Compile the content element.
+     *
+     * @return void
      */
     protected function compile()
     {

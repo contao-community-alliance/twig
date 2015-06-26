@@ -17,19 +17,36 @@
  * @package ContaoTwig
  * @author  Oliver Hoff <oliver@hofff.com>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigRefererAccessObject extends System
+// @codingStandardsIgnoreEnd
 {
-
+    /**
+     * Create a new instance.
+     *
+     * @codingStandardsIgnoreStart - Overriding is not useless as we change the visibility to public.
+     */
     public function __construct()
     {
         parent::__construct();
     }
+    // @codingStandardsIgnoreEnd
 
+    /**
+     * Generate a string representation.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->current();
     }
 
+    /**
+     * Retrieve the current referrer.
+     *
+     * @return string
+     */
     public function current()
     {
         if (version_compare(VERSION, '3', '>=')) {

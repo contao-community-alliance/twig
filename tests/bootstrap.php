@@ -6,7 +6,6 @@
  * @package ContaoTwig
  * @link    https://github.com/bit3/contao-twig SCM
  * @link    http://de.contaowiki.org/Twig Wiki
- * @author  Tristan Lins <tristan.lins@bit3.de>
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */

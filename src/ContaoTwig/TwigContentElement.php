@@ -12,25 +12,30 @@
  */
 
 /**
- * Class TwigContentElement
- *
  * A ContentElement implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-abstract class TwigContentElement
-    extends ContentElement
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+abstract class TwigContentElement extends ContentElement
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The template instance.
+     *
      * @var TwigFrontendTemplate
      */
+    // @codingStandardsIgnoreStart
     protected $Template;
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Parse the template
+     * Parse the template.
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function generate()
     {

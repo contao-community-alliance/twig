@@ -12,25 +12,23 @@
  */
 
 /**
- * Class TwigPagination
- *
  * A Pagination implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-class TwigPagination
-    extends Pagination
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class TwigPagination extends Pagination
+// @codingStandardsIgnoreEnd
 {
     /**
-     * Generate the pagination menu and return it as HTML string
+     * Generate the pagination menu and return it as HTML string.
      *
-     * @param string
+     * @param string $strSeparator Ignored in this implementation.
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function generate($strSeparator = '')
     {
@@ -38,6 +36,88 @@ class TwigPagination
             return '';
         }
 
+        $this->determineValues();
+
+        // Return if there is only one page
+        if ($this->intTotalPages < 2 || $this->intRows < 1) {
+            return '';
+        }
+
+        if ($this->intPage > $this->intTotalPages) {
+            $this->intPage = $this->intTotalPages;
+        }
+
+        $template = $this->prepareTemplate();
+
+        $this->setHeadTags();
+
+        return $template->parse();
+    }
+
+    /**
+     * Generate all page links separated with the given argument and return them as array.
+     *
+     * @return string
+     */
+    public function getItems()
+    {
+        $arrLinks = array();
+
+        $intNumberOfLinks = floor($this->intNumberOfLinks / 2);
+        $intFirstOffset   = ($this->intPage - $intNumberOfLinks - 1);
+
+        if ($intFirstOffset > 0) {
+            $intFirstOffset = 0;
+        }
+
+        $intLastOffset = ($this->intPage + $intNumberOfLinks - $this->intTotalPages);
+
+        if ($intLastOffset < 0) {
+            $intLastOffset = 0;
+        }
+
+        $intFirstLink = ($this->intPage - $intNumberOfLinks - $intLastOffset);
+
+        if ($intFirstLink < 1) {
+            $intFirstLink = 1;
+        }
+
+        $intLastLink = ($this->intPage + $intNumberOfLinks - $intFirstOffset);
+
+        if ($intLastLink > $this->intTotalPages) {
+            $intLastLink = $this->intTotalPages;
+        }
+
+        for ($i = $intFirstLink; $i <= $intLastLink; $i++) {
+            $arrLinks[] = (object) array(
+                'page'    => $i,
+                'current' => $i == $this->intPage,
+                'href'    => $this->getItemLink($i)
+            );
+        }
+
+        return $arrLinks;
+    }
+
+    /**
+     * Retrieve the link to an item.
+     *
+     * @param int $item The item index.
+     *
+     * @return string
+     */
+    protected function getItemLink($item)
+    {
+        return $this->linkToPage($item);
+    }
+
+    /**
+     * Determine the basic values like the url and the total amount of pages.
+     *
+     * @return void
+     */
+    protected function determineValues()
+    {
         $this->strUrl = preg_replace(
             array(
                 '#\?page=\d+&#i',
@@ -49,7 +129,7 @@ class TwigPagination
                 '',
                 ''
             ),
-            \Environment::getInstance()->request
+            \Environment::get('request')
         );
 
         $this->strVarConnector = strpos(
@@ -59,119 +139,81 @@ class TwigPagination
             ? '&amp;'
             : '?';
         $this->intTotalPages   = ceil($this->intRows / $this->intRowsPerPage);
+    }
 
-        // Return if there is only one page
-        if ($this->intTotalPages < 2 || $this->intRows < 1) {
-            return '';
-        }
+    /**
+     * Build the template instance and return it.
+     *
+     * @return TwigFrontendTemplate
+     */
+    private function prepareTemplate()
+    {
+        $template = new TwigFrontendTemplate('pagination');
 
-        if ($this->intPage > $this->intTotalPages) {
-            $this->intPage = $this->intTotalPages;
-        }
+        $template->hasFirst    = $this->hasFirst();
+        $template->hasPrevious = $this->hasPrevious();
+        $template->hasNext     = $this->hasNext();
+        $template->hasLast     = $this->hasLast();
 
-        $this->Template = new TwigFrontendTemplate('pagination');
+        $template->items = $this->getItems();
+        $template->page  = $this->intPage;
+        $template->total = $this->intTotalPages;
 
-        $this->Template->hasFirst    = $this->hasFirst();
-        $this->Template->hasPrevious = $this->hasPrevious();
-        $this->Template->hasNext     = $this->hasNext();
-        $this->Template->hasLast     = $this->hasLast();
-
-        $this->Template->items = $this->getItems();
-        $this->Template->page  = $this->intPage;
-        $this->Template->total = $this->intTotalPages;
-
-        $this->Template->first = array
+        $template->first = array
         (
             'page' => 1,
             'link' => $this->lblFirst,
             'href' => $this->linkToPage(1),
         );
 
-        $this->Template->previous = array
+        $template->previous = array
         (
             'page' => $this->intPage - 1,
             'link' => $this->lblPrevious,
             'href' => $this->linkToPage($this->intPage - 1),
         );
 
-        $this->Template->next = array
+        $template->next = array
         (
             'page' => $this->intPage + 1,
             'link' => $this->lblNext,
             'href' => $this->linkToPage($this->intPage + 1),
         );
 
-        $this->Template->last = array
+        $template->last = array
         (
             'page' => $this->intTotalPages,
             'link' => $this->lblLast,
             'href' => $this->linkToPage($this->intTotalPages),
         );
 
-        global $objPage;
-        $strTagClose = ($objPage->outputFormat == 'xhtml')
+        return $template;
+    }
+
+    /**
+     * Set the head tags (link rel next/prev).
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    protected function setHeadTags()
+    {
+        $strTagClose = ($GLOBALS['objPage']->outputFormat == 'xhtml')
             ? ' />'
             : '>';
 
         // Add rel="prev" and rel="next" links (see #3515)
         if ($this->hasPrevious()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage(
-                    $this->intPage - 1
-                ) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' .
+                $this->linkToPage($this->intPage - 1) .
+                '"' . $strTagClose;
         }
         if ($this->hasNext()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage(
-                    $this->intPage + 1
-                ) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' .
+                $this->linkToPage($this->intPage + 1) .
+                '"' . $strTagClose;
         }
-
-        return $this->Template->parse();
-    }
-
-    /**
-     * Generate all page links separated with the given argument and return them as array
-     *
-     * @param string
-     *
-     * @return string
-     */
-    public function getItems()
-    {
-        $arrLinks = array();
-
-        $intNumberOfLinks = floor($this->intNumberOfLinks / 2);
-        $intFirstOffset   = $this->intPage - $intNumberOfLinks - 1;
-
-        if ($intFirstOffset > 0) {
-            $intFirstOffset = 0;
-        }
-
-        $intLastOffset = $this->intPage + $intNumberOfLinks - $this->intTotalPages;
-
-        if ($intLastOffset < 0) {
-            $intLastOffset = 0;
-        }
-
-        $intFirstLink = $this->intPage - $intNumberOfLinks - $intLastOffset;
-
-        if ($intFirstLink < 1) {
-            $intFirstLink = 1;
-        }
-
-        $intLastLink = $this->intPage + $intNumberOfLinks - $intFirstOffset;
-
-        if ($intLastLink > $this->intTotalPages) {
-            $intLastLink = $this->intTotalPages;
-        }
-
-        for ($i = $intFirstLink; $i <= $intLastLink; $i++) {
-            $arrLinks[] = (object) array(
-                'page'    => $i,
-                'current' => $i == $this->intPage,
-                'href'    => $this->linkToPage($i)
-            );
-        }
-
-        return $arrLinks;
     }
 }
