@@ -12,11 +12,22 @@
  */
 
 /**
- * Class ContaoTwigOptionsBuilder
+ * Class ContaoTwigOptionsBuilder.
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigOptionsBuilder
+// @codingStandardsIgnoreEnd
 {
-    static public function getTemplateOptions($templatePrefix = '', ContaoTwig $twig = null)
+    /**
+     * Retrieve the template options.
+     *
+     * @param string          $templatePrefix The template prefix to use.
+     *
+     * @param ContaoTwig|null $twig           The twig instance to use.
+     *
+     * @return array
+     */
+    public static function getTemplateOptions($templatePrefix = '', ContaoTwig $twig = null)
     {
         if (!$twig) {
             $twig = ContaoTwig::getInstance();
@@ -32,12 +43,24 @@ class ContaoTwigOptionsBuilder
         return $options;
     }
 
-    static protected function collectTemplateOptions($templatePrefix, $path, &$options)
+    /**
+     * Collect the template options.
+     *
+     * @param string $templatePrefix The template prefix.
+     *
+     * @param string $path           The template path.
+     *
+     * @param array  $options        The options array to populate.
+     *
+     * @return void
+     */
+    protected static function collectTemplateOptions($templatePrefix, $path, &$options)
     {
         $relativePath = str_replace(TL_ROOT . '/', '', $path);
 
         $iterator = new RecursiveDirectoryIterator(
-            $path, FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS
+            $path,
+            (FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS)
         );
         $iterator = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::LEAVES_ONLY);
 

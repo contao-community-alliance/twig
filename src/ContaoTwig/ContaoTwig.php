@@ -19,9 +19,13 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwig extends Controller
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The instance.
+     *
      * @var ContaoTwig
      */
     protected static $objInstance = null;
@@ -29,7 +33,7 @@ class ContaoTwig extends Controller
     /**
      * Return the instance of ContaoTwig.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @return ContaoTwig|Twig_Environment
      */
@@ -38,7 +42,7 @@ class ContaoTwig extends Controller
         if (!$config) {
             $config = new ContaoTwigConfig();
         }
-        $key = (string)$config;
+        $key = (string) $config;
         if (self::$objInstance[$key] === null) {
             self::$objInstance[$key] = new self($config);
         }
@@ -75,9 +79,9 @@ class ContaoTwig extends Controller
     protected $environment;
 
     /**
-     * Create the new twig contao environment
+     * Create the new twig contao environment.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
@@ -172,19 +176,28 @@ class ContaoTwig extends Controller
         }
     }
 
+    /**
+     * Retrieve the list of valid template pathes.
+     *
+     * @param ContaoTwigConfig $config The config to use.
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
     private function getTemplatePathes(ContaoTwigConfig $config)
     {
         $arrTemplatePaths = array();
         // Add the layout templates directory
         if ($config->isEnableThemeTemplatesLoader() && TL_MODE == 'FE') {
-            global $objPage;
             $strTemplateGroup = str_replace(
                 array(
                     '../',
                     'templates/'
                 ),
                 '',
-                $objPage->templateGroup
+                $GLOBALS['objPage']->templateGroup
             );
 
             if ($strTemplateGroup != '') {
@@ -214,19 +227,17 @@ class ContaoTwig extends Controller
     }
 
     /**
+     * Add the module template pathes to the given array.
      *
-     * @param ContaoTwigConfig $config
-     * @param                  $arrTemplatePaths
+     * @param ContaoTwigConfig $config           The config to use.
+     * @param array            $arrTemplatePaths The list of template pathes.
      *
      * @return void
      */
     private function addModuleTemplatePathes(ContaoTwigConfig $config, &$arrTemplatePaths)
     {
         if ($config->isEnableModuleTemplatesLoader()) {
-            foreach (
-                Config::getInstance()
-                    ->getActiveModules() as $strModule
-            ) {
+            foreach (\ModuleLoader::getActive() as $strModule) {
                 $strPath = TL_ROOT . '/system/modules/' . $strModule . '/templates';
 
                 if (is_dir($strPath)) {
@@ -237,14 +248,14 @@ class ContaoTwig extends Controller
     }
 
     /**
+     * Create the default array loader if enabled.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @return void
      */
     private function enableArrayLoader(ContaoTwigConfig $config)
     {
-// Create the default array loader
         if ($config->isEnableArrayLoader()) {
             $this->loaderArray = new Twig_Loader_Array(array());
             $this->loader->addLoader($this->loaderArray);
@@ -252,14 +263,14 @@ class ContaoTwig extends Controller
     }
 
     /**
+     * Create the default filesystem loader if enabled.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @return void
      */
     private function enableFilesystemLoader(ContaoTwigConfig $config)
     {
-// Create the default filesystem loader
         if ($config->isEnableFilesystemLoader()) {
             $this->loaderFilesystem = new Twig_Loader_Filesystem($this->getTemplatePathes($config));
             $this->loader->addLoader($this->loaderFilesystem);
@@ -267,15 +278,16 @@ class ContaoTwig extends Controller
     }
 
     /**
+     * Create the environment.
      *
-     * @param ContaoTwigConfig $config
-     * @param                  $blnDebug
+     * @param ContaoTwigConfig $config   The config to use.
+     *
+     * @param bool             $blnDebug Flag if debugging shall be enabled.
      *
      * @return void
      */
     private function createEnvironment(ContaoTwigConfig $config, $blnDebug)
     {
-// Create the environment
         $this->environment = new Twig_Environment(
             $this->loader,
             array(
@@ -287,8 +299,9 @@ class ContaoTwig extends Controller
     }
 
     /**
+     * Set time format and default date format and timezone if enabled.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @return void
      *
@@ -297,8 +310,10 @@ class ContaoTwig extends Controller
      */
     private function addDefaultFormats(ContaoTwigConfig $config)
     {
+        /** @var Twig_Extension_Core $extension */
+        $extension = $this->environment->getExtension('core');
         if ($config->isSetNumberFormat()) {
-            $this->environment->getExtension('core')->setNumberFormat(
+            $extension->setNumberFormat(
                 2,
                 $GLOBALS['TL_LANG']['MSC']['decimalSeparator'],
                 $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']
@@ -307,16 +322,17 @@ class ContaoTwig extends Controller
 
         // set default date format and timezone
         if ($config->isSetDateFormat()) {
-            $this->environment->getExtension('core')->setDateFormat($GLOBALS['TL_CONFIG']['datimFormat']);
+            $extension->setDateFormat($GLOBALS['TL_CONFIG']['datimFormat']);
         }
         if ($config->isSetTimeZone()) {
-            $this->environment->getExtension('core')->setTimezone($GLOBALS['TL_CONFIG']['timeZone']);
+            $extension->setTimezone($GLOBALS['TL_CONFIG']['timeZone']);
         }
     }
 
     /**
+     * Call the initialization hook if enabled.
      *
-     * @param ContaoTwigConfig $config
+     * @param ContaoTwigConfig $config The config to use.
      *
      * @return void
      *
@@ -326,9 +342,9 @@ class ContaoTwig extends Controller
     private function callInitializationHooks(ContaoTwigConfig $config)
     {
         // HOOK: custom twig initialisation
-        if ($config->isCallInitializationHook() && isset($GLOBALS['TL_HOOKS']['initializeTwig']) && is_array(
-                $GLOBALS['TL_HOOKS']['initializeTwig']
-            )
+        if ($config->isCallInitializationHook()
+            && isset($GLOBALS['TL_HOOKS']['initializeTwig'])
+            && is_array($GLOBALS['TL_HOOKS']['initializeTwig'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['initializeTwig'] as $callback) {
                 $this->import($callback[0]);

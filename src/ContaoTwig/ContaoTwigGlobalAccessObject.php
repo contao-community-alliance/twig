@@ -12,24 +12,26 @@
  */
 
 /**
- * Class ContaoTwigGlobalAccessObject
- *
  * Provide access to global variables by reference..
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigGlobalAccessObject
+// @codingStandardsIgnoreEnd
 {
     /**
-     * The global variable name.
+     * The global root key name.
      *
      * @var string
      */
     protected $var;
 
     /**
-     * @param string $var
+     * Create a new instance.
+     *
+     * @param string $var The root key to work on in the globals array.
      */
     public function __construct($var)
     {
@@ -37,7 +39,9 @@ class ContaoTwigGlobalAccessObject
     }
 
     /**
-     * @param string $key
+     * Retrieve a value from the globals array.
+     *
+     * @param string $key The sub key to obtain.
      *
      * @return mixed
      *
@@ -50,7 +54,9 @@ class ContaoTwigGlobalAccessObject
     }
 
     /**
-     * @param string $key
+     * Check if a value has been set.
+     *
+     * @param string $key The sub key to check.
      *
      * @return bool
      *
@@ -63,10 +69,12 @@ class ContaoTwigGlobalAccessObject
     }
 
     /**
+     * Retrieve as string representation.
+     *
      * @return string
      */
     public function __toString()
     {
-        return "\$GLOBALS['{$this->var}']";
+        return sprintf('$GLOBALS[\'%s\']', $this->var);
     }
 }

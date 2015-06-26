@@ -22,19 +22,23 @@ use Database\Statement;
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
+// @codingStandardsIgnoreEnd
 {
+    /**
+     * Create a new instance.
+     *
+     * @codingStandardsIgnoreStart - This override is not useless as we change the visibility.
+     */
     public function __construct()
     {
         parent::__construct();
     }
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Initializes the runtime environment.
-     *
-     * This is where you can load some file that contains filter functions for instance.
-     *
-     * @param Twig_Environment $environment The current Twig_Environment instance
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -43,9 +47,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns the token parser instances to add to the existing list.
-     *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * {@inheritdoc}
      */
     public function getTokenParsers()
     {
@@ -53,9 +55,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns the node visitor instances to add to the existing list.
-     *
-     * @return array An array of Twig_NodeVisitorInterface instances
+     * {@inheritdoc}
      */
     public function getNodeVisitors()
     {
@@ -63,9 +63,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns a list of tests to add to the existing list.
-     *
-     * @return array An array of tests
+     * {@inheritdoc}
      */
     public function getTests()
     {
@@ -73,9 +71,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns a list of operators to add to the existing list.
-     *
-     * @return array An array of operators
+     * {@inheritdoc}
      */
     public function getOperators()
     {
@@ -83,9 +79,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     *
-     *
-     * @return array
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
@@ -114,6 +108,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
         return $globals;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFilters()
     {
         return array(
@@ -123,7 +120,8 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
                 array(
                     $this,
                     '_dateFilter'
-                ), array('needs_environment' => true)
+                ),
+                array('needs_environment' => true)
             ),
             'dateFormat'  => new Twig_Filter_Function(
                 array(
@@ -183,11 +181,15 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
                 array(
                     $this,
                     '_stringify'
-                ), array('needs_environment' => true)
+                ),
+                array('needs_environment' => true)
             ),
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions()
     {
         return array(
@@ -213,9 +215,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -223,20 +223,24 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
+     * Apply the date filter.
      *
+     * @param Twig_Environment           $env      The environment.
      *
-     * @param Twig_Environment $env
-     * @param                  $date
-     * @param null             $format
-     * @param null             $timezone
+     * @param DateInterval|DateTime|null $date     The date.
+     *
+     * @param null|string                $format   The format.
+     *
+     * @param null|string                $timezone The timezone.
      *
      * @return mixed|string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @codingStandardsIgnoreStart
      */
-    public function _dateFilter(\Twig_Environment $env, $date, $format = null, $timezone = null)
+    public function _dateFilter(\Twig_Environment $env, $date, $format = null, $timezone = null) // @codingStandardsIgnoreEnd
     {
         $string = twig_date_format_filter($env, $date, $format, $timezone);
 
@@ -303,67 +307,56 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Parse the timestamp with the default date format.
      *
-     * @static
-     *
-     * @param int $timestamp
+     * @param int $timestamp The timestamp.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @codingStandardsIgnoreStart
      */
-    public function _parseDateFilter($timestamp)
+    public function _parseDateFilter($timestamp) // @codingStandardsIgnoreEnd
     {
         if ($timestamp instanceof \DateTime) {
             $timestamp = $timestamp->getTimestamp();
         }
 
-        return $this
-            ->parseDate(
-                $GLOBALS['TL_CONFIG']['dateFormat'],
-                $timestamp
-            );
+        return \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $timestamp);
     }
 
     /**
      * Parse the timestamp with the default date and time format.
      *
-     * @static
-     *
-     * @param int $timestamp
+     * @param int $timestamp The timestamp.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @codingStandardsIgnoreStart
      */
-    public function _parseDatimFilter($timestamp)
+    public function _parseDatimFilter($timestamp) // @codingStandardsIgnoreEnd
     {
         if ($timestamp instanceof \DateTime) {
             $timestamp = $timestamp->getTimestamp();
         }
 
-        return $this
-            ->parseDate(
-                $GLOBALS['TL_CONFIG']['datimFormat'],
-                $timestamp
-            );
+        return \Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $timestamp);
     }
 
     /**
      * Prepare a database statement.
      *
-     * @static
-     *
-     * @param string $sql
+     * @param string $sql The database statement.
      *
      * @return Statement
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
-    public function _prepareFilter($sql)
+    public function _prepareFilter($sql) // @codingStandardsIgnoreEnd
     {
         return Database::getInstance()
             ->prepare($sql);
@@ -372,38 +365,34 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Set database statement update arguments.
      *
-     * @static
+     * @param Statement $statement The statement.
      *
-     * @param Statement $statement
-     * @param array     $arguments
+     * @param array     $arguments The arguments.
      *
      * @return Statement
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
-    public function _setFilter(
-        Statement $statement,
-        array $arguments
-    ) {
+    public function _setFilter(Statement $statement, array $arguments) // @codingStandardsIgnoreEnd
+    {
         return $statement->set($arguments);
     }
 
     /**
      * Execute a database statement.
      *
-     * @static
+     * @param string|Statement $statement The statement.
      *
-     * @param string|Statement $statement
-     * @param array                     $arguments
+     * @param array            $arguments The arguments.
      *
      * @return Result
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
-    public function _executeFilter(
-        $statement,
-        array $arguments = array()
-    ) {
+    public function _executeFilter($statement,array $arguments = array()) // @codingStandardsIgnoreEnd
+    {
         if ($statement instanceof Statement) {
             /** @var Statement $statement */
             return $statement
@@ -419,15 +408,14 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Execute a database query.
      *
-     * @static
-     *
-     * @param string $statement
+     * @param string $statement The statement.
      *
      * @return Result
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
-    public function _queryFilter($statement)
+    public function _queryFilter($statement) // @codingStandardsIgnoreEnd
     {
         return Database::getInstance()
             ->query($statement)
@@ -435,15 +423,16 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Add an image
+     * Add an image.
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @codingStandardsIgnoreStart
      */
-    public function _addImage()
+    public function _addImage() // @codingStandardsIgnoreEnd
     {
         $arguments = func_get_args();
         if (is_array($arguments) && is_array($arguments[1])) {
@@ -457,6 +446,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
         } else {
             if (is_array($arguments)) {
                 list($src, $width, $height, $mode, $alt, $attributes) = $arguments;
+
                 $fallback = false;
             } else {
                 $src        = $arguments;
@@ -513,13 +503,13 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Get all messages as string.
      *
-     * @param array $arguments
+     * @param array $arguments The arguments.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
-    public function _getMessages($arguments = array())
+    public function _getMessages($arguments = array()) // @codingStandardsIgnoreEnd
     {
         return $this
             ->getMessages(
@@ -529,13 +519,18 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * @param string|array $parameters
+     * Add and remove parameters from the current url.
+     *
+     * @param string|array $parameters      Array of parameters to set.
+     *
+     * @param bool         $addRefererId    Flag if the referer token shall be added to the url.
+     *
+     * @param array        $unsetParameters Array of parameters that shall be unset.
      *
      * @return string
-     *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
-    public function _addToUrl($parameters, $addRefererId = true, $unsetParameters = array())
+    public function _addToUrl($parameters, $addRefererId = true, $unsetParameters = array()) // @codingStandardsIgnoreEnd
     {
         if (is_array($parameters)) {
             $parameters = http_build_query($parameters);
@@ -549,27 +544,35 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     * Format with an array
+     * Format with an array.
      *
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     */
-    public function _vformat($format, $arguments)
-    {
-        return vsprintf($format, (array)$arguments);
-    }
-
-    /**
-     * Generate a frontend url
+     * @param string $format    The format string.
      *
-     * @param mixed $page
-     * @param null  $params
-     * @param null  $language
+     * @param array  $arguments The arguments.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
-    public function _generateUrl($page, $params = null, $language = null)
+    public function _vformat($format, $arguments) // @codingStandardsIgnoreEnd
+    {
+        return vsprintf($format, (array) $arguments);
+    }
+
+    /**
+     * Generate a frontend url.
+     *
+     * @param mixed       $page     The page or page collection or page id.
+     *
+     * @param null|string $params   The url parameters to use.
+     *
+     * @param null|string $language The language string to use.
+     *
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    public function _generateUrl($page, $params = null, $language = null) // @codingStandardsIgnoreEnd
     {
         if ($page instanceof Result) {
             $page = $page->row();
@@ -604,8 +607,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Stringify a value and make it human readable.
      *
-     * @param Twig_Environment $env
-     * @param mixed            $value
+     * @param Twig_Environment $env   The twig environment.
+     *
+     * @param mixed            $value The value to convert to string.
      *
      * @return string
      *
@@ -613,7 +617,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function _stringify(\Twig_Environment $env, $value)
+    public function _stringify(\Twig_Environment $env, $value) // @codingStandardsIgnoreEnd
     {
         if (is_object($value)) {
             if ($value instanceof ArrayObject) {
@@ -641,7 +645,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
 
             return '[' . implode(', ', $values) . ']';
         }
-        if (is_null($value)) {
+        if (null === $value) {
             return 'NULL';
         }
         if (is_bool($value)) {
@@ -655,7 +659,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     *
+     * Retrieve the currently logged in frontend user.
      *
      * @return bool|User
      */
@@ -667,7 +671,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     *
+     * Retrieve the currently logged in backend user.
      *
      * @return bool|User
      */
@@ -679,7 +683,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     }
 
     /**
-     *
+     * Retrieve the currently active backend theme.
      *
      * @return bool|string
      */

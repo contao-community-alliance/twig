@@ -13,34 +13,44 @@
  */
 
 /**
- * Class TwigTemplate
- *
  * A generic template implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class TwigTemplate
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The template name.
+     *
      * @var string
      */
     protected $templateName;
 
     /**
+     * The template format.
+     *
      * @var string
      */
     protected $format;
 
     /**
+     * The template file extension.
+     *
      * @var string
      */
     protected $fileExtension;
 
     /**
-     * @param string $templateName
-     * @param string $format
-     * @param string $fileExtension
+     * Create a new instance.
+     *
+     * @param string $templateName  The template name.
+     *
+     * @param string $format        The template format.
+     *
+     * @param string $fileExtension The template file extension.
      */
     public function __construct($templateName = null, $format = null, $fileExtension = 'twig')
     {
@@ -50,7 +60,9 @@ class TwigTemplate
     }
 
     /**
-     * @param string $template
+     * Set the template name.
+     *
+     * @param string $template The new value.
      *
      * @return TwigTemplate
      */
@@ -62,6 +74,8 @@ class TwigTemplate
     }
 
     /**
+     * Retrieve the template name.
+     *
      * @return string
      */
     public function getTemplateName()
@@ -70,7 +84,9 @@ class TwigTemplate
     }
 
     /**
-     * @param string $format
+     * Set the template format.
+     *
+     * @param string $format The new value.
      *
      * @return TwigTemplate
      */
@@ -82,6 +98,8 @@ class TwigTemplate
     }
 
     /**
+     * Retrieve the template format.
+     *
      * @return string
      */
     public function getFormat()
@@ -90,7 +108,9 @@ class TwigTemplate
     }
 
     /**
-     * @param string $fileExtension
+     * Set the template file extension.
+     *
+     * @param string $fileExtension The new value.
      *
      * @return TwigTemplate
      */
@@ -102,6 +122,8 @@ class TwigTemplate
     }
 
     /**
+     * Retrieve the template file extension.
+     *
      * @return string
      */
     public function getFileExtension()
@@ -113,7 +135,8 @@ class TwigTemplate
      * Get the effective template file.
      *
      * @return string
-     * @throws RuntimeException
+     *
+     * @throws RuntimeException When no template name has been defined.
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
@@ -141,7 +164,9 @@ class TwigTemplate
     }
 
     /**
-     * @param array $context
+     * Parse the template.
+     *
+     * @param array $context The context to use.
      *
      * @return string
      *
@@ -182,5 +207,4 @@ class TwigTemplate
 
         return $buffer;
     }
-
 }

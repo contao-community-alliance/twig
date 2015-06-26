@@ -12,14 +12,14 @@
  */
 
 /**
- * Class TwigHelper
- *
  * A helper class with some functions.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class TwigHelper
+// @codingStandardsIgnoreEnd
 {
     /**
      * Singleton instance.
@@ -44,13 +44,13 @@ class TwigHelper
     }
 
     /**
-     * Return all template files of a particular group as array
+     * Return all template files of a particular group as array.
      *
-     * @param string
-     * @param integer
+     * @param string  $prefix  The string prefix to use.
+     *
+     * @param integer $themeId The theme in which to search.
      *
      * @return array
-     * @throws Exception
      */
     public static function getTemplateGroup($prefix, $themeId = 0)
     {
@@ -62,7 +62,7 @@ class TwigHelper
         // Add the theme templates folder
         if ($themeId > 0) {
             $resultSet = Database::getInstance()
-                ->prepare("SELECT templates FROM tl_theme WHERE id=?")
+                ->prepare('SELECT templates FROM tl_theme WHERE id=?')
                 ->limit(1)
                 ->execute($themeId);
 
@@ -72,7 +72,7 @@ class TwigHelper
         }
 
         // Add the module templates folders if they exist
-        $activeModules = Config::getInstance()->getActiveModules();
+        $activeModules = \ModuleLoader::getActive();
         foreach ($activeModules as $module) {
             $folder = TL_ROOT . '/system/modules/' . $module . '/templates';
 
@@ -85,13 +85,13 @@ class TwigHelper
     }
 
     /**
-     * Return all template files of a particular group as array
+     * Return all template files of a particular group as array.
      *
-     * @param string
-     * @param integer
+     * @param string   $prefix  The prefix to use.
+     *
+     * @param string[] $folders The folders to search.
      *
      * @return array
-     * @throws Exception
      */
     public static function getTemplateGroupInFolders($prefix, $folders)
     {
@@ -101,7 +101,7 @@ class TwigHelper
         foreach ($folders as $sourceName => $folder) {
             $iterator = new RecursiveDirectoryIterator(
                 $folder,
-                RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::UNIX_PATHS
+                (RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::UNIX_PATHS)
             );
             $iterator = new RecursiveIteratorIterator(
                 $iterator,

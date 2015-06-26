@@ -12,20 +12,19 @@
  */
 
 /**
- * Class TwigPagination
- *
  * A Pagination implementation that use Twig as template engine.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-class TwigPagination
-    extends Pagination
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class TwigPagination extends Pagination
+// @codingStandardsIgnoreEnd
 {
     /**
-     * Generate the pagination menu and return it as HTML string
+     * Generate the pagination menu and return it as HTML string.
      *
-     * @param string
+     * @param string $strSeparator Ignored in this implementation.
      *
      * @return string
      *
@@ -56,9 +55,7 @@ class TwigPagination
     }
 
     /**
-     * Generate all page links separated with the given argument and return them as array
-     *
-     * @param string
+     * Generate all page links separated with the given argument and return them as array.
      *
      * @return string
      */
@@ -67,25 +64,25 @@ class TwigPagination
         $arrLinks = array();
 
         $intNumberOfLinks = floor($this->intNumberOfLinks / 2);
-        $intFirstOffset   = $this->intPage - $intNumberOfLinks - 1;
+        $intFirstOffset   = ($this->intPage - $intNumberOfLinks - 1);
 
         if ($intFirstOffset > 0) {
             $intFirstOffset = 0;
         }
 
-        $intLastOffset = $this->intPage + $intNumberOfLinks - $this->intTotalPages;
+        $intLastOffset = ($this->intPage + $intNumberOfLinks - $this->intTotalPages);
 
         if ($intLastOffset < 0) {
             $intLastOffset = 0;
         }
 
-        $intFirstLink = $this->intPage - $intNumberOfLinks - $intLastOffset;
+        $intFirstLink = ($this->intPage - $intNumberOfLinks - $intLastOffset);
 
         if ($intFirstLink < 1) {
             $intFirstLink = 1;
         }
 
-        $intLastLink = $this->intPage + $intNumberOfLinks - $intFirstOffset;
+        $intLastLink = ($this->intPage + $intNumberOfLinks - $intFirstOffset);
 
         if ($intLastLink > $this->intTotalPages) {
             $intLastLink = $this->intTotalPages;
@@ -203,21 +200,20 @@ class TwigPagination
      */
     protected function setHeadTags()
     {
-        global $objPage;
-        $strTagClose = ($objPage->outputFormat == 'xhtml')
+        $strTagClose = ($GLOBALS['objPage']->outputFormat == 'xhtml')
             ? ' />'
             : '>';
 
         // Add rel="prev" and rel="next" links (see #3515)
         if ($this->hasPrevious()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' . $this->linkToPage(
-                    $this->intPage - 1
-                ) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="prev" href="' .
+                $this->linkToPage($this->intPage - 1) .
+                '"' . $strTagClose;
         }
         if ($this->hasNext()) {
-            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' . $this->linkToPage(
-                    $this->intPage + 1
-                ) . '"' . $strTagClose;
+            $GLOBALS['TL_HEAD'][] = '<link rel="next" href="' .
+                $this->linkToPage($this->intPage + 1) .
+                '"' . $strTagClose;
         }
     }
 }

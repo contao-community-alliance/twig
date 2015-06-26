@@ -19,34 +19,30 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigEnvironmentAccessObject
+// @codingStandardsIgnoreEnd
 {
     /**
-     * The environment object.
+     * Retrieve a value from the Environment.
      *
-     * @var Environment
-     */
-    protected $environment;
-
-    public function __construct()
-    {
-        $this->environment = Environment::getInstance();
-    }
-
-    /**
-     * @param string $key
+     * @param string $key The key to retrieve.
      *
      * @return mixed
      */
     public function __get($key)
     {
-        return $this->environment->$key;
+        return \Environment::get($key);
     }
 
     /**
-     * @param string $key
+     * Check if a value has been set.
+     *
+     * @param string $key The key to check.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __isset($key)
     {
@@ -54,6 +50,8 @@ class ContaoTwigEnvironmentAccessObject
     }
 
     /**
+     * Get a string representation.
+     *
      * @return string
      */
     public function __toString()

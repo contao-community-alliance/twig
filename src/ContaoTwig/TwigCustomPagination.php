@@ -12,52 +12,46 @@
  */
 
 /**
- * Class TwigCustomPagination
- *
  * A specialised TwigPagination implementation that build the pagination from an array of links.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@infinitysoft.de>
  */
-class TwigCustomPagination
-    extends TwigPagination
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class TwigCustomPagination extends TwigPagination
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The links to generate the pagination from.
+     *
      * @var array
      */
     protected $arrLinks;
 
     /**
-     * @var string
+     * Create a new instance.
+     *
+     * @param array $arrLinks         The links to generate the pagination from.
+     *
+     * @param int   $intNumberOfLinks The amount of links to display.
      */
-    protected $strParam;
-
-    /**
-     * @param array $arrLinks
-     * @param int   $intNumberOfLinks
-     */
-    public function __construct(
-        array $arrLinks,
-        $intNumberOfLinks = 7
-    ) {
-        parent::__construct(
-            count($arrLinks),
-            1,
-            $intNumberOfLinks
-        );
+    public function __construct(array $arrLinks, $intNumberOfLinks = 7)
+    {
+        parent::__construct(count($arrLinks), 1, $intNumberOfLinks);
 
         $this->arrLinks = array_values($arrLinks);
     }
 
     /**
-     * Generate the pagination menu and return it as HTML string
+     * Generate the pagination menu and return it as HTML string.
      *
-     * @param string
+     * @param string $strSeparator Unused in this implementation.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function generate($strSeparator = '')
     {
@@ -94,7 +88,7 @@ class TwigCustomPagination
         (
             'page' => $this->intPage - 1,
             'link' => $this->lblPrevious,
-            'href' => $this->arrLinks[$this->intPage - 2],
+            'href' => $this->arrLinks[($this->intPage - 2)],
         );
 
         $template->next = array
@@ -108,7 +102,7 @@ class TwigCustomPagination
         (
             'page' => $this->intTotalPages,
             'link' => $this->lblLast,
-            'href' => $this->arrLinks[count($this->arrLinks) - 1],
+            'href' => $this->arrLinks[(count($this->arrLinks) - 1)],
         );
 
         $this->setHeadTags();
@@ -125,7 +119,7 @@ class TwigCustomPagination
      */
     protected function getItemLink($item)
     {
-        return $this->arrLinks[$item - 1];
+        return $this->arrLinks[($item - 1)];
     }
 
     /**
@@ -141,7 +135,7 @@ class TwigCustomPagination
         $strRequest    = rawurldecode(\Environment::get('request'));
         foreach ($this->arrLinks as $intPage => $strLink) {
             if ($strRequest == rawurldecode($strLink)) {
-                $this->intPage = $intPage + 1;
+                $this->intPage = ($intPage + 1);
                 break;
             }
         }

@@ -19,16 +19,22 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-abstract class TwigHybrid
-    extends Hybrid
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+abstract class TwigHybrid extends Hybrid
+// @codingStandardsIgnoreEnd
 {
     /**
+     * The template instance.
+     *
      * @var TwigFrontendTemplate
+     *
+     * @codingStandardsIgnoreStart
      */
     protected $Template;
+    // @codingStandardsIgnoreEnd
 
     /**
-     * Parse the template
+     * Parse the template.
      *
      * @return string
      *

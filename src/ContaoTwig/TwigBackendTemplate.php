@@ -19,20 +19,13 @@
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
-class TwigBackendTemplate
-    extends BackendTemplate
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
+class TwigBackendTemplate extends BackendTemplate
+// @codingStandardsIgnoreEnd
 {
-    public function __construct(
-        $strTemplate = '',
-        $strContentType = 'text/html'
-    ) {
-        parent::__construct(
-            $strTemplate,
-            $strContentType
-        );
-    }
-
     /**
+     * Parse the template.
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
@@ -64,9 +57,8 @@ class TwigBackendTemplate
             );
 
         // HOOK: add custom parse filters
-        if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && is_array(
-                $GLOBALS['TL_HOOKS']['parseBackendTemplate']
-            )
+        if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate'])
+            && is_array($GLOBALS['TL_HOOKS']['parseBackendTemplate'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback) {
                 $this->import($callback[0]);
@@ -81,15 +73,18 @@ class TwigBackendTemplate
     }
 
     /**
+     * Override the output format.
+     *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     private function overrideOutputFormatFrontend()
     {
         if (TL_MODE == 'FE') {
-            global $objPage;
-
-            if ($objPage->outputFormat != '') {
-                $this->strFormat = $objPage->outputFormat;
+            if ($GLOBALS['objPage']->outputFormat != '') {
+                $this->strFormat = $GLOBALS['objPage']->outputFormat;
             }
 
             $this->strTagEnding = ($this->strFormat == 'xhtml')

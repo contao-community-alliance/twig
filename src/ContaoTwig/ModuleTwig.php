@@ -12,24 +12,26 @@
  */
 
 /**
- * Class ModuleTwig
- *
  * Frontend module using a twig template as content.
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
  */
+// @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ModuleTwig extends TwigModule
+// @codingStandardsIgnoreEnd
 {
     /**
-     * Template
+     * Template name.
      *
      * @var string
      */
     protected $strTemplate = 'mod_twig';
 
     /**
-     * Compile the content element
+     * Compile the content element.
+     *
+     * @return void
      */
     protected function compile()
     {
