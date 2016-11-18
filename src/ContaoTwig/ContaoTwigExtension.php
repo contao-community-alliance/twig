@@ -3,13 +3,16 @@
 /**
  * Twig Integration for the Contao OpenSource CMS
  *
- * @package ContaoTwig
- * @link    https://github.com/bit3/contao-twig SCM
- * @link    http://de.contaowiki.org/Twig Wiki
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @author  Oliver Hoff <oliver@hofff.com>
- * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @package   ContaoTwig
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @author    Oliver Hoff <oliver@hofff.com>
+ * @author    Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @copyright 2012-2015 Tristan Lins.
+ * @copyright 2015-2016 Contao Community Alliance
+ * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @link      https://github.com/bit3/contao-twig SCM
+ * @link      http://de.contaowiki.org/Twig Wiki
  */
 use Database\Result;
 use Database\Statement;
@@ -21,6 +24,8 @@ use Database\Statement;
  *
  * @package ContaoTwig
  * @author  Tristan Lins <tristan.lins@bit3.de>
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 // @codingStandardsIgnoreStart - class is not within a namespace - this will change with next major.
 class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
@@ -225,7 +230,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Apply the date filter.
      *
-     * @param Twig_Environment           $env      The environment.
+     * @param \Twig_Environment          $env      The environment.
      *
      * @param DateInterval|DateTime|null $date     The date.
      *
@@ -508,6 +513,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
     public function _getMessages($arguments = array()) // @codingStandardsIgnoreEnd
     {
@@ -528,7 +534,9 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @param array        $unsetParameters Array of parameters that shall be unset.
      *
      * @return string
+     *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
     public function _addToUrl($parameters, $addRefererId = true, $unsetParameters = array()) // @codingStandardsIgnoreEnd
     {
@@ -553,6 +561,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
     public function _vformat($format, $arguments) // @codingStandardsIgnoreEnd
     {
@@ -571,6 +580,7 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @codingStandardsIgnoreStart
      */
     public function _generateUrl($page, $params = null, $language = null) // @codingStandardsIgnoreEnd
     {
@@ -607,17 +617,18 @@ class ContaoTwigExtension extends Controller implements Twig_ExtensionInterface
     /**
      * Stringify a value and make it human readable.
      *
-     * @param Twig_Environment $env   The twig environment.
+     * @param \Twig_Environment $env   The twig environment.
      *
-     * @param mixed            $value The value to convert to string.
+     * @param mixed             $value The value to convert to string.
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @codingStandardsIgnoreStart
      */
-    public function _stringify(\Twig_Environment $env, $value) // @codingStandardsIgnoreEnd
+    public function _stringify(\Twig_Environment $env, $value) //@codingStandardsIgnoreEnd
     {
         if (is_object($value)) {
             if ($value instanceof ArrayObject) {
