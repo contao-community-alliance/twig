@@ -8,6 +8,7 @@
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author  David Molineus <david.molineus@netzmacht.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -52,7 +53,8 @@ abstract class TwigContentElement extends ContentElement
 
         $this->compile();
 
-        $this->Template->style = !empty($this->arrStyle)
+        $this->Template->inColumn = $this->strColumn;
+        $this->Template->style    = !empty($this->arrStyle)
             ? implode(
                 ' ',
                 $this->arrStyle
