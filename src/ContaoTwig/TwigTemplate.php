@@ -9,6 +9,7 @@
  * @author  Tristan Lins <tristan.lins@bit3.de>
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author  Sven Baumann <baumann.sv@gmail.com>
+ * @author  David Molineus <david.molineus@netzmacht.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -183,7 +184,7 @@ class TwigTemplate
         ) {
             foreach ($GLOBALS['TL_HOOKS']['prepareTwigTemplate'] as $callback) {
                 $object = \System::importStatic($callback[0]);
-                $object->$callback[1]($this, $context);
+                $object->{$callback[1]}($this, $context);
             }
         }
 
@@ -197,7 +198,7 @@ class TwigTemplate
         ) {
             foreach ($GLOBALS['TL_HOOKS']['parseTwigTemplate'] as $callback) {
                 $object = \System::importStatic($callback[0]);
-                $buffer = $object->$callback[1](
+                $buffer = $object->{$callback[1]}(
                     $buffer,
                     $context,
                     $this

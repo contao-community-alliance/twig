@@ -8,6 +8,7 @@
  * @link    http://de.contaowiki.org/Twig Wiki
  * @author  Tristan Lins <tristan.lins@bit3.de>
  * @author  Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author  David Molineus <david.molineus@netzmacht.de>
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
@@ -44,7 +45,7 @@ class TwigBackendTemplate extends BackendTemplate
         if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate'])) {
             foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback) {
                 $this->import($callback[0]);
-                $this->$callback[0]->$callback[1]($this);
+                $this->{$callback[0]}->{$callback[1]}($this);
             }
         }
 
@@ -62,7 +63,7 @@ class TwigBackendTemplate extends BackendTemplate
         ) {
             foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback) {
                 $this->import($callback[0]);
-                $strBuffer = $this->$callback[0]->$callback[1](
+                $strBuffer = $this->{$callback[0]}->{$callback[1]}(
                     $strBuffer,
                     $this->strTemplate
                 );
